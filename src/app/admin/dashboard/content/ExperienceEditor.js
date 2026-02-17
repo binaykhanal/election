@@ -13,6 +13,10 @@ import TiptapEditor from "@/components/public/TiptapEditor";
 //   ),
 // });
 
+const CkEditor = dynamic(() => import("@/components/editor/CkEditor"), {
+  ssr: false,
+});
+
 export default function ExperienceEditor({ value, onChange }) {
   const [data, setData] = useState(
     value || {
@@ -238,10 +242,11 @@ export default function ExperienceEditor({ value, onChange }) {
                       }
                     />
                     <div className="md:col-span-2">
-                      <TiptapEditor
-                        value={rawValue}
-                        onChange={(val) => updateField(lang, val)}
-                        className="min-h-[18rem] mb-12 p-3"
+                      <CkEditor
+                        editorData={item.description}
+                        handleEditorChange={(val) =>
+                          updateField(section, idx, "description", val)
+                        }
                       />
                     </div>
                   </div>
@@ -265,13 +270,11 @@ export default function ExperienceEditor({ value, onChange }) {
                         updateField(section, idx, "title", e.target.value)
                       }
                     />
-                    <ReactQuill
-                      theme="snow"
-                      value={item.description}
-                      onChange={(val) =>
+                    <CkEditor
+                      editorData={item.description}
+                      handleEditorChange={(val) =>
                         updateField(section, idx, "description", val)
                       }
-                      className="bg-white rounded"
                     />
                   </div>
                 )}

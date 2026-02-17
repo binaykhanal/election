@@ -1,52 +1,28 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import dynamic from "next/dynamic";
 import {
   ArrowLeft,
   Save,
   Eye,
   Globe,
   Languages,
-  Image as ImageIcon,
   Loader2,
+  Image as ImageIcon,
 } from "lucide-react";
 import Link from "next/link";
-import "react-quill-new/dist/quill.snow.css";
+import dynamic from "next/dynamic";
 import ImageGalleryModal from "@/components/public/ImageGalleryModal";
 import { useToast } from "@/components/ui/ToastProvider";
-import Quill from "quill";
 
-const ReactQuill = dynamic(
-  async () => {
-    const { default: RQ } = await import("react-quill-new");
-    const { default: ImageResize } =
-      await import("quill-image-resize-module-react");
-
-    const Quill = RQ.Quill;
-    if (!Quill.imports["modules/imageResize"]) {
-      Quill.register("modules/imageResize", ImageResize);
-    }
-
-    return RQ;
-  },
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-64 bg-gray-50 animate-pulse rounded-lg border" />
-    ),
-  },
-);
-const quillModules = {
-  toolbar: [
-    [{ header: [1, 2, 3, false] }],
-    ["bold", "italic", "underline", "strike"],
-    [{ list: "ordered" }, { list: "bullet" }],
-    ["link", "image"],
-    ["clean"],
-  ],
-};
+// CKEditor dynamic import
+const CkEditor = dynamic(() => import("@/components/editor/CkEditor"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-64 bg-gray-50 animate-pulse rounded-lg border" />
+  ),
+});
 
 export default function EditBlogPage() {
   const router = useRouter();
@@ -87,65 +63,11 @@ export default function EditBlogPage() {
     fetchBlog();
   }, [id, router]);
 
-  const generateSlug = (title) => {
-    return title
+  const generateSlug = (title) =>
+    title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "");
-  };
-
-  const imageHandler = () => {
-    const input = document.createElement("input");
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
-    input.click();
-
-    input.onchange = async () => {
-      const file = input.files[0];
-      if (!file) return;
-
-      const formData = new FormData();
-      formData.append("file", file);
-
-      try {
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-        const data = await res.json();
-
-        if (data.url) {
-          const quill = quillRef.current.getEditor();
-          const range = quill.getSelection();
-          quill.insertEmbed(range.index, "image", data.url);
-        }
-      } catch (error) {
-        showToast("Upload Error", "Failed to upload image to editor", "error");
-      }
-    };
-  };
-
-  const modules = useMemo(
-    () => ({
-      toolbar: {
-        container: [
-          [{ header: [1, 2, 3, false] }],
-          ["bold", "italic", "underline", "strike"],
-          [{ list: "ordered" }, { list: "bullet" }],
-          ["link", "image"],
-          ["clean"],
-        ],
-        handlers: {
-          image: imageHandler,
-        },
-      },
-      imageResize: {
-        parchment: Quill.import("parchment"),
-        modules: ["Resize", "DisplaySize"],
-      },
-    }),
-    [],
-  );
 
   const handleSubmit = async (e, publish = formData.published) => {
     if (e) e.preventDefault();
@@ -212,6 +134,7 @@ export default function EditBlogPage() {
 
   return (
     <div className="max-w-5xl mx-auto pb-20">
+      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-4">
           <Link
@@ -251,8 +174,10 @@ export default function EditBlogPage() {
         </div>
       </div>
 
+      {/* Content */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
+          {/* Language Tabs */}
           <div className="flex border-b border-gray-200">
             <button
               onClick={() => setActiveTab("en")}
@@ -276,97 +201,72 @@ export default function EditBlogPage() {
             </button>
           </div>
 
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-            {activeTab === "en" ? (
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
-                    English Title
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.titleEn}
-                    onChange={(e) =>
-                      setFormData({ ...formData, titleEn: e.target.value })
-                    }
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none text-lg"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
-                    English Excerpt
-                  </label>
-                  <textarea
-                    value={formData.excerptEn}
-                    onChange={(e) =>
-                      setFormData({ ...formData, excerptEn: e.target.value })
-                    }
-                    rows={3}
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
-                    Content (EN)
-                  </label>
-                  <ReactQuill
-                    theme="snow"
-                    value={formData.contentEn}
-                    onChange={(val) =>
-                      setFormData({ ...formData, contentEn: val })
-                    }
-                    modules={quillModules}
-                    className="h-80 mb-12"
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="space-y-6 font-nepali">
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2 font-sans">
-                    नेपाली शीर्षक
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.titleNp}
-                    onChange={(e) =>
-                      setFormData({ ...formData, titleNp: e.target.value })
-                    }
-                    className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none text-lg"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2 font-sans">
-                    नेपाली सारांश
-                  </label>
-                  <textarea
-                    value={formData.excerptNp}
-                    onChange={(e) =>
-                      setFormData({ ...formData, excerptNp: e.target.value })
-                    }
-                    rows={3}
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-bold text-gray-700 mb-2 font-sans">
-                    सामग्री (नेपाली)
-                  </label>
-                  <ReactQuill
-                    theme="snow"
-                    value={formData.contentNp}
-                    onChange={(val) =>
-                      setFormData({ ...formData, contentNp: val })
-                    }
-                    modules={quillModules}
-                    className="h-80 mb-12"
-                  />
-                </div>
-              </div>
-            )}
+          {/* Editor */}
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
+            {/* Title */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                {activeTab === "en" ? "English Title" : "नेपाली शीर्षक"}
+              </label>
+              <input
+                type="text"
+                value={activeTab === "en" ? formData.titleEn : formData.titleNp}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    [activeTab === "en" ? "titleEn" : "titleNp"]:
+                      e.target.value,
+                    ...(activeTab === "en"
+                      ? { slug: generateSlug(e.target.value) }
+                      : {}),
+                  })
+                }
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg outline-none text-lg"
+              />
+            </div>
+
+            {/* Excerpt */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                {activeTab === "en" ? "English Excerpt" : "नेपाली सारांश"}
+              </label>
+              <textarea
+                value={
+                  activeTab === "en" ? formData.excerptEn : formData.excerptNp
+                }
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    [activeTab === "en" ? "excerptEn" : "excerptNp"]:
+                      e.target.value,
+                  })
+                }
+                rows={3}
+                className="w-full px-4 py-2 border border-gray-200 rounded-lg outline-none"
+              />
+            </div>
+
+            {/* CKEditor */}
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-2">
+                {activeTab === "en" ? "Content (EN)" : "सामग्री (NP)"}
+              </label>
+              <CkEditor
+                editorData={
+                  activeTab === "en" ? formData.contentEn : formData.contentNp
+                }
+                handleEditorChange={(val) =>
+                  setFormData({
+                    ...formData,
+                    [activeTab === "en" ? "contentEn" : "contentNp"]: val,
+                  })
+                }
+              />
+            </div>
           </div>
         </div>
 
+        {/* Sidebar */}
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
             <h3 className="font-bold text-gray-900 mb-4 border-b pb-2">
@@ -413,6 +313,7 @@ export default function EditBlogPage() {
         </div>
       </div>
 
+      {/* Image Gallery Modal */}
       {showGallery && (
         <ImageGalleryModal
           onClose={() => setShowGallery(false)}

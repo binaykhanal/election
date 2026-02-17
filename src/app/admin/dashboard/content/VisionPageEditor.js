@@ -3,6 +3,10 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { CheckSquare, Video, Trash2, Plus } from "lucide-react";
 
+const CkEditor = dynamic(() => import("@/components/editor/CkEditor"), {
+  ssr: false,
+});
+
 const ICONS = {
   graduation: dynamic(() =>
     import("lucide-react").then((mod) => mod.GraduationCap),
@@ -17,15 +21,20 @@ const ICONS = {
 };
 
 export default function VisionPageEditor({ value, onChange }) {
-  const [data, setData] = useState(
-    value || {
-      title: "",
-      subtitle: "",
-      vision_items: [],
-      commitments: [],
-      videos: [],
-    },
-  );
+  const defaultData = {
+    title: "",
+    subtitle: "",
+    manifesto_header: "",
+    manifesto_subtitle: "",
+    vision_items: [],
+    commitments: [],
+    videos: [],
+  };
+
+  const [data, setData] = useState({
+    ...defaultData,
+    ...value,
+  });
 
   const syncData = (newData) => {
     setData(newData);
@@ -108,6 +117,31 @@ export default function VisionPageEditor({ value, onChange }) {
           value={data.subtitle}
           onChange={(e) => setData({ ...data, subtitle: e.target.value })}
         />
+      </div>
+
+      {/* Manifesto Section */}
+      <div className="bg-yellow-50 p-6 rounded border border-yellow-200 space-y-4">
+        <h3 className="text-sm font-bold text-yellow-700 uppercase">
+          Manifesto Section
+        </h3>
+
+        <input
+          placeholder="Manifesto Header"
+          className="w-full border p-2 rounded"
+          value={data.manifesto_header}
+          onChange={(e) =>
+            syncData({ ...data, manifesto_header: e.target.value })
+          }
+        />
+
+        <div className="bg-white rounded border">
+          <CkEditor
+            editorData={data.manifesto_subtitle}
+            handleEditorChange={(val) =>
+              syncData({ ...data, manifesto_subtitle: val })
+            }
+          />
+        </div>
       </div>
 
       <div className="bg-blue-50 p-4 rounded border border-blue-200 space-y-4">

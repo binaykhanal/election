@@ -20,8 +20,15 @@ const ICONS = {
 
 export function VisionContent({ data }) {
   const locale = useLocale();
+
+  function decodeHtml(html) {
+    const txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  }
   const visionAreas = data?.vision_items || [];
   const commitments = data?.commitments || [];
+  const manifestoHtml = decodeHtml(data.manifesto_subtitle);
 
   return (
     <div className="space-y-24 ">
@@ -38,11 +45,24 @@ export function VisionContent({ data }) {
             Official Manifesto
           </span>
           <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter uppercase italic">
-            {locale === "np" ? "हाम्रो घोषणापत्र" : "Our Manifesto"}
+            {data.manifesto_header ||
+              (locale === "np" ? "हाम्रो घोषणापत्र" : "Our Manifesto")}
           </h2>
-          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto font-medium leading-relaxed">
-            "{data.subtitle}"
-          </p>
+
+          {data.manifesto_subtitle && (
+            <div
+              className="
+          prose prose-invert
+          prose-lg md:prose-xl
+          max-w-3xl
+          text-white/90
+          prose-headings:text-white
+          prose-strong:text-white
+          prose-a:text-white
+        "
+              dangerouslySetInnerHTML={{ __html: manifestoHtml }}
+            />
+          )}
         </div>
       </div>
 

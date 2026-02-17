@@ -1,0 +1,89 @@
+{
+  "metadata": {
+    "title": "Ram Prasad Sapkota (Dipsikha) | Bhaktapur-2 | Nepali Communist Party",
+    "description": "Official campaign website of Ram Prasad Sapkota (Dipsikha), candidate for Bhaktapur-2 constituency from Nepali Communist Party. Vote for change, vote for progress."
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "vision": "Vision & Agenda",
+    "experience": "Experience",
+    "blogs": "Blogs",
+    "contact": "Contact",
+    "join": "Join Campaign",
+    "support": "Support Us"
+  },
+  "hero": {
+    "tagline": "For a New Nepal",
+    "name": "Ram Prasad Sapkota",
+    "nickname": "Dipsikha",
+    "title": "Candidate • Bhaktapur-2",
+    "party": "Nepali Communist Party (Ne Ka Pa)",
+    "description": "New generation leadership. Transparent governance. Prosperous Nepal for all.",
+    "ctaManifesto": "View Manifesto",
+    "ctaBiography": "Read Biography",
+    "electionCountdown": "Days until election"
+  },
+  "about": {
+    "title": "About Ram Prasad Sapkota",
+    "subtitle": "A Leader Committed to Change",
+    "journey": "Political Journey",
+    "values": "Core Values",
+    "achievements": "Key Achievements"
+  },
+  "vision": {
+    "title": "Vision & Agenda",
+    "subtitle": "Building Bhaktapur-2, Building Nepal",
+    "education": "Education",
+    "healthcare": "Healthcare",
+    "infrastructure": "Infrastructure",
+    "employment": "Employment",
+    "agriculture": "Agriculture",
+    "tourism": "Tourism"
+  },
+  "experience": {
+    "title": "Work Experience",
+    "subtitle": "Years of Dedicated Service",
+    "political": "Political Experience",
+    "social": "Social Work",
+    "education": "Educational Background"
+  },
+  "blogs": {
+    "title": "Latest Updates",
+    "subtitle": "News, Views & Campaign Updates",
+    "readMore": "Read More",
+    "publishedOn": "Published on",
+    "by": "By"
+  },
+  "contact": {
+    "title": "Contact Us",
+    "subtitle": "Get in Touch",
+    "address": "Campaign Office",
+    "phone": "Phone",
+    "email": "Email",
+    "form": {
+      "name": "Your Name",
+      "email": "Your Email",
+      "subject": "Message Subject",
+      "message": "Your Message",
+      "submit": "Send Message",
+      "success": "Message sent successfully!",
+      "error": "Failed to send message. Please try again."
+    }
+  },
+  "footer": {
+    "tagline": "For Democracy. For Progress. For Nepal.",
+    "quickLinks": "Quick Links",
+    "connect": "Connect With Us",
+    "contact": "Contact",
+    "rights": "All rights reserved."
+  },
+  "common": {
+    "loading": "Loading...",
+    "readMore": "Read More",
+    "viewAll": "View All",
+    "learnMore": "Learn More",
+    "joinMovement": "Join the Movement",
+    "supportCampaign": "Support the Campaign"
+  }
+}

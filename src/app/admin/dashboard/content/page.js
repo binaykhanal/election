@@ -15,11 +15,9 @@ import {
   Users,
 } from "lucide-react";
 import ImageGalleryModal from "@/components/public/ImageGalleryModal";
-// import "react-quill-new/dist/quill.snow.css";
 import VisionPageEditor from "./VisionPageEditor";
 import ExperienceEditor from "./ExperienceEditor";
 import { useToast } from "@/components/ui/ToastProvider";
-import TiptapEditor from "@/components/public/TiptapEditor";
 
 const ICONS = {
   graduation: dynamic(() =>

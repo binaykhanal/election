@@ -16,7 +16,6 @@ import dynamic from "next/dynamic";
 import ImageGalleryModal from "@/components/public/ImageGalleryModal";
 import { useToast } from "@/components/ui/ToastProvider";
 
-// CKEditor dynamic import
 const CkEditor = dynamic(() => import("@/components/editor/CkEditor"), {
   ssr: false,
   loading: () => (
@@ -134,7 +133,6 @@ export default function EditBlogPage() {
 
   return (
     <div className="max-w-5xl mx-auto pb-20">
-      {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-4">
           <Link
@@ -174,10 +172,8 @@ export default function EditBlogPage() {
         </div>
       </div>
 
-      {/* Content */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-6">
-          {/* Language Tabs */}
           <div className="flex border-b border-gray-200">
             <button
               onClick={() => setActiveTab("en")}
@@ -201,9 +197,7 @@ export default function EditBlogPage() {
             </button>
           </div>
 
-          {/* Editor */}
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 space-y-6">
-            {/* Title */}
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">
                 {activeTab === "en" ? "English Title" : "नेपाली शीर्षक"}
@@ -225,7 +219,6 @@ export default function EditBlogPage() {
               />
             </div>
 
-            {/* Excerpt */}
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">
                 {activeTab === "en" ? "English Excerpt" : "नेपाली सारांश"}
@@ -246,7 +239,6 @@ export default function EditBlogPage() {
               />
             </div>
 
-            {/* CKEditor */}
             <div>
               <label className="block text-sm font-bold text-gray-700 mb-2">
                 {activeTab === "en" ? "Content (EN)" : "सामग्री (NP)"}
@@ -266,7 +258,6 @@ export default function EditBlogPage() {
           </div>
         </div>
 
-        {/* Sidebar */}
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
             <h3 className="font-bold text-gray-900 mb-4 border-b pb-2">
@@ -313,7 +304,6 @@ export default function EditBlogPage() {
         </div>
       </div>
 
-      {/* Image Gallery Modal */}
       {showGallery && (
         <ImageGalleryModal
           onClose={() => setShowGallery(false)}

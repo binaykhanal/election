@@ -8,7 +8,6 @@ import dynamic from "next/dynamic";
 import ImageGalleryModal from "@/components/public/ImageGalleryModal";
 import { useToast } from "@/components/ui/ToastProvider";
 
-// CKEditor dynamic import (no SSR)
 const CkEditor = dynamic(() => import("@/components/editor/CkEditor"), {
   ssr: false,
   loading: () => (
@@ -110,7 +109,6 @@ export default function NewBlogPage() {
 
   return (
     <div className="max-w-5xl mx-auto pb-20">
-      {/* Header & Actions */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div className="flex items-center gap-4">
           <Link
@@ -144,9 +142,7 @@ export default function NewBlogPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Content */}
         <div className="lg:col-span-2">
-          {/* Language Tabs */}
           <div className="flex border-b mb-6 bg-gray-50 rounded-t-lg p-1">
             <button
               onClick={() => setActiveTab("en")}
@@ -170,9 +166,7 @@ export default function NewBlogPage() {
             </button>
           </div>
 
-          {/* Editor */}
           <div className="bg-white p-6 rounded-xl shadow-sm border space-y-4">
-            {/* Title */}
             <div>
               <label className="text-sm font-semibold text-gray-700">
                 {activeTab === "en" ? "English Title" : "नेपाली शीर्षक"}
@@ -198,7 +192,6 @@ export default function NewBlogPage() {
               />
             </div>
 
-            {/* Excerpt */}
             <div>
               <label className="text-sm font-semibold text-gray-700">
                 {activeTab === "en" ? "English Excerpt" : "नेपाली सारांश"}
@@ -224,7 +217,6 @@ export default function NewBlogPage() {
               />
             </div>
 
-            {/* CKEditor Content */}
             <div>
               <label className="text-sm font-semibold text-gray-700 mb-1 block">
                 {activeTab === "en"
@@ -246,9 +238,7 @@ export default function NewBlogPage() {
           </div>
         </div>
 
-        {/* Sidebar */}
         <div className="space-y-6">
-          {/* Featured Image */}
           <div className="bg-white p-6 rounded-xl border shadow-sm">
             <label className="block text-xs font-bold uppercase text-gray-500 mb-2">
               Featured Image
@@ -272,7 +262,6 @@ export default function NewBlogPage() {
             </div>
           </div>
 
-          {/* Slug */}
           <div className="bg-white p-6 rounded-xl border shadow-sm">
             <label className="block text-xs font-bold uppercase text-gray-500 mb-2">
               URL Slug
@@ -289,7 +278,6 @@ export default function NewBlogPage() {
         </div>
       </div>
 
-      {/* Image Gallery Modal */}
       {showGallery && (
         <ImageGalleryModal
           onClose={() => setShowGallery(false)}

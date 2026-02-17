@@ -4,14 +4,8 @@ import { useState, useRef } from "react";
 import dynamic from "next/dynamic";
 import { Layout, Video, Trash2, Plus } from "lucide-react";
 import ImageGalleryModal from "@/components/public/ImageGalleryModal";
-import TiptapEditor from "@/components/public/TiptapEditor";
 
-// const ReactQuill = dynamic(() => import("react-quill-new"), {
-//   ssr: false,
-//   loading: () => (
-//     <div className="h-64 bg-gray-50 animate-pulse rounded-lg border" />
-//   ),
-// });
+
 
 const CkEditor = dynamic(() => import("@/components/editor/CkEditor"), {
   ssr: false,

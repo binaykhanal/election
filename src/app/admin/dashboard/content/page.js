@@ -287,11 +287,11 @@ export default function ContentManagementPage() {
       (img) => img && !newImages.includes(img),
     );
     for (let img of removedImages) {
-      if (!img) continue; // skip null/undefined
+      if (!img) continue; 
 
       try {
         const filename = img.split("/").pop();
-        if (!filename) continue; // skip empty filenames
+        if (!filename) continue; 
 
         await fetch("/api/upload", {
           method: "DELETE",

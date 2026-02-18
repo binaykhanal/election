@@ -43,16 +43,21 @@ export default function BlogsManagementPage() {
       try {
         const res = await fetch(`/api/blogs/${id}`, { method: "DELETE" });
         if (res.ok) {
-          setBlogs(blogs.filter((b) => b.id !== id));
+          setBlogs(blogs.filter((b) => b._id !== id));
         }
+        showToast("Changes Saved", "Blog deleted Successfully", "success");
       } catch (err) {
-        alert("Delete failed");
+        showToast(
+          "Save Failed",
+          "There was a problem deleting blog. Please try again.",
+          "error",
+        );
       }
     }
   };
 
   const togglePublish = async (id) => {
-    const blog = blogs.find((b) => b.id === id);
+    const blog = blogs.find((b) => b._id === id);
     const newStatus = !blog.published;
 
     try {
@@ -66,10 +71,15 @@ export default function BlogsManagementPage() {
       });
       if (res.ok) {
         const updated = await res.json();
-        setBlogs(blogs.map((b) => (b.id === id ? updated : b)));
+        setBlogs(blogs.map((b) => (b._id === id ? updated : b)));
       }
+      showToast("Changes Saved", "Blog Status changed Successfully", "success");
     } catch (err) {
-      alert("Status update failed");
+      showToast(
+        "Save Failed",
+        "There was a problem in changing blog status. Please try again.",
+        "error",
+      );
     }
   };
 
@@ -148,9 +158,9 @@ export default function BlogsManagementPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
-                  {filteredBlogs.map((blog) => (
+                  {filteredBlogs.map((blog, idx) => (
                     <tr
-                      key={blog.id}
+                      key={idx}
                       className="hover:bg-gray-50 transition-colors"
                     >
                       <td className="px-6 py-4">
@@ -183,7 +193,7 @@ export default function BlogsManagementPage() {
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-center gap-2">
                           <Link
-                            href={`/admin/dashboard/blogs/edit/${blog.id}`}
+                            href={`/admin/dashboard/blogs/edit/${blog._id}`}
                             className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
                             title="Edit"
                           >

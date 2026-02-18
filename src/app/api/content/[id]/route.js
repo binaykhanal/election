@@ -7,8 +7,9 @@ export async function GET(request, { params }) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const resolvedParams = await params;
 
+    const { id } = resolvedParams;
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
@@ -34,7 +35,9 @@ export async function PUT(request, { params }) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const resolvedParams = await params;
+
+    const { id } = resolvedParams;
     const data = await request.json();
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -79,8 +82,9 @@ export async function DELETE(request, { params }) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const resolvedParams = await params;
 
+    const { id } = resolvedParams;
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }

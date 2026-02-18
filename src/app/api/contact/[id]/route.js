@@ -7,7 +7,9 @@ export async function PATCH(request, { params }) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const resolvedParams = await params;
+
+    const { id } = resolvedParams;
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
@@ -37,8 +39,9 @@ export async function DELETE(request, { params }) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const resolvedParams = await params;
 
+    const { id } = resolvedParams;
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }

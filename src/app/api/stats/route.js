@@ -1,21 +1,25 @@
 import { NextResponse } from "next/server";
+import connectDB from "@/lib/server/db";
 import { Blog } from "@/models";
-import { fn, col } from "sequelize";
 
 export async function GET() {
   try {
-    const totalBlogs = await Blog.count();
+    await connectDB();
 
-    const publishedBlogs = await Blog.count({
-      where: { published: true },
-    });
+    const totalBlogs = await Blog.countDocuments();
 
-    let totalViews = 0;
-    try {
-      totalViews = (await Blog.sum("views")) || 0;
-    } catch (e) {
-      console.log("Views column not found, defaulting to 0");
-    }
+    const publishedBlogs = await Blog.countDocuments({ published: true });
+
+    const result = await Blog.aggregate([
+      {
+        $group: {
+          _id: null,
+          totalViews: { $sum: "$views" },
+        },
+      },
+    ]);
+
+    const totalViews = result[0]?.totalViews || 0;
 
     return NextResponse.json({
       total: totalBlogs,
@@ -23,7 +27,8 @@ export async function GET() {
       views: totalViews,
     });
   } catch (error) {
-    console.error("Sequelize Stats Error:", error);
+    console.error("Mongo Blog Stats Error:", error);
+
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 },

@@ -1,97 +1,118 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../lib/server/db";
+import mongoose from "mongoose";
 
-export const User = sequelize.define(
-  "User",
+const userSchema = new mongoose.Schema(
   {
-    id: {
-      type: DataTypes.STRING,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
-    },
     name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
+      trim: true,
     },
     email: {
-      type: DataTypes.STRING,
+      type: String,
+      required: true,
       unique: true,
-      allowNull: false,
+      lowercase: true,
+      trim: true,
+      index: true,
     },
     password: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
     },
     role: {
-      type: DataTypes.ENUM("ADMIN", "EDITOR"),
-      defaultValue: "EDITOR",
+      type: String,
+      enum: ["ADMIN", "EDITOR"],
+      default: "EDITOR",
     },
   },
-  { tableName: "users" },
+  { timestamps: true },
 );
 
-export const Blog = sequelize.define(
-  "Blog",
+export const User = mongoose.models.User || mongoose.model("User", userSchema);
+
+const blogSchema = new mongoose.Schema(
   {
-    id: {
-      type: DataTypes.STRING,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
+    titleEn: String,
+    titleNp: String,
+
+    slug: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true,
     },
-    titleEn: { type: DataTypes.STRING, field: "title_en" },
-    titleNp: { type: DataTypes.STRING, field: "title_np" },
-    slug: { type: DataTypes.STRING, unique: true },
-    contentEn: { type: DataTypes.TEXT, field: "content_en" },
-    contentNp: { type: DataTypes.TEXT, field: "content_np" },
-    excerptEn: { type: DataTypes.STRING, field: "excerpt_en" },
-    excerptNp: { type: DataTypes.STRING, field: "excerpt_np" },
-    featuredImage: { type: DataTypes.STRING, field: "featured_image" },
-    published: { type: DataTypes.BOOLEAN, defaultValue: false },
-    publishedAt: { type: DataTypes.DATE, field: "published_at" },
+
+    contentEn: String,
+    contentNp: String,
+
+    excerptEn: String,
+    excerptNp: String,
+
+    featuredImage: String,
+
+    published: {
+      type: Boolean,
+      default: false,
+    },
+
+    publishedAt: Date,
+
     views: {
-      type: DataTypes.INTEGER,
-      defaultValue: 0,
+      type: Number,
+      default: 0,
     },
   },
-  { tableName: "blogs" },
+  { timestamps: true },
 );
 
-export const Inquiry = sequelize.define(
-  "Inquiry",
+export const Blog = mongoose.models.Blog || mongoose.model("Blog", blogSchema);
+
+const inquirySchema = new mongoose.Schema(
   {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
+    name: {
+      type: String,
+      required: true,
     },
-    name: { type: DataTypes.STRING, allowNull: false },
-    email: { type: DataTypes.STRING, allowNull: false },
-    subject: { type: DataTypes.STRING },
-    message: { type: DataTypes.TEXT, allowNull: false },
-    isRead: { type: DataTypes.BOOLEAN, defaultValue: false },
+
+    email: {
+      type: String,
+      required: true,
+    },
+
+    subject: String,
+
+    message: {
+      type: String,
+      required: true,
+    },
+
+    isRead: {
+      type: Boolean,
+      default: false,
+    },
   },
-  { tableName: "inquiries" },
+  { timestamps: true },
 );
 
-export const Content = sequelize.define(
-  "Content",
+export const Inquiry =
+  mongoose.models.Inquiry || mongoose.model("Inquiry", inquirySchema);
+
+const contentSchema = new mongoose.Schema(
   {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true,
-    },
     page: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      defaultValue: "home",
+      type: String,
+      default: "home",
+      required: true,
     },
+
     key: {
-      type: DataTypes.STRING,
-      allowNull: false,
+      type: String,
+      required: true,
     },
+
     type: {
-      type: DataTypes.ENUM(
+      type: String,
+      enum: [
         "HERO",
         "ABOUT",
         "VISION",
@@ -106,14 +127,17 @@ export const Content = sequelize.define(
         "EXPERIENCE_EDITOR",
         "SETTINGS",
         "SOCIAL",
-      ),
-      defaultValue: "RICH_TEXT",
+      ],
+      default: "RICH_TEXT",
     },
-    valueEn: { type: DataTypes.TEXT, field: "value_en" },
-    valueNp: { type: DataTypes.TEXT, field: "value_np" },
+
+    valueEn: String,
+    valueNp: String,
   },
-  {
-    tableName: "contents",
-    indexes: [{ unique: true, fields: ["page", "key"] }],
-  },
+  { timestamps: true },
 );
+
+contentSchema.index({ page: 1, key: 1 }, { unique: true });
+
+export const Content =
+  mongoose.models.Content || mongoose.model("Content", contentSchema);

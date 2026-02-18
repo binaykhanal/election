@@ -1,40 +1,40 @@
-import sequelize from "@/lib/server/db.js";
-import { User } from "@/models/index.js";
+import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-// adjust path if needed
+import connectDB from "./src/lib/server/db.js";
+import { User } from "./src/models/index.js";
 
 async function createAdmin() {
   try {
-    await sequelize.authenticate();
-    console.log("✅ Database connected");
+    await connectDB();
+    console.log(" Database connected");
 
-    const email = "admin@campaign.com";
-    const password = "admin123"; // change after first login
+    const email = process.env.ADMIN_EMAIL || "admin@campaign.com";
+    const password = process.env.ADMIN_PASSWORD || "admin123";
+    const name = process.env.ADMIN_NAME || "Admin";
 
-    // Check if user already exists
-    const existing = await User.findOne({ where: { email } });
-
-    if (existing) {
-      console.log("⚠️ Admin already exists");
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      console.log(`  User with email "${email}" already exists.`);
       process.exit(0);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await User.create({
-      name: "Admin",
+    const adminUser = await User.create({
+      name,
       email,
       password: hashedPassword,
-      role: "admin",
+      role: "ADMIN",
     });
 
-    console.log("🎉 Admin user created successfully!");
-    console.log("Email:", email);
-    console.log("Password:", password);
+    console.log("Admin user created successfully:");
+    console.log(`Name: ${adminUser.name}`);
+    console.log(`Email: ${adminUser.email}`);
+    console.log(`Role: ${adminUser.role}`);
 
     process.exit(0);
   } catch (error) {
-    console.error("❌ Error creating admin:", error);
+    console.error(" Failed to create admin user:", error);
     process.exit(1);
   }
 }

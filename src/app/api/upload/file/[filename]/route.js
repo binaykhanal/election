@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import path from "path";
-import fs from "fs";
+import fs from "fs/promises";
 
 const UPLOAD_DIR = path.join(process.cwd(), "uploads");
 
@@ -18,11 +18,13 @@ export async function GET(req, { params }) {
 
     const filePath = path.join(UPLOAD_DIR, filename);
 
-    if (!fs.existsSync(filePath)) {
+    try {
+      await fs.access(filePath);
+    } catch {
       return NextResponse.json({ error: "File not found" }, { status: 404 });
     }
 
-    const fileBuffer = await fs.promises.readFile(filePath);
+    const fileBuffer = await fs.readFile(filePath);
     const ext = path.extname(filename).toLowerCase();
 
     const mimeTypes = {

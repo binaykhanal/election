@@ -1,14 +1,18 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-import SequelizeAdapter from "@auth/sequelize-adapter";
-import sequelize from "@/lib/server/db.js";
 import bcrypt from "bcryptjs";
+
+import connectDB from "@/lib/server/db";
+import { User } from "@/models";
 import authConfig from "../../../../auth.config.js";
-import { User } from "../../../../models/index.js";
 
 const handler = NextAuth({
-  adapter: SequelizeAdapter(sequelize),
   ...authConfig,
+
+  session: {
+    strategy: "jwt", 
+  },
+
   providers: [
     Credentials({
       name: "Credentials",
@@ -16,14 +20,15 @@ const handler = NextAuth({
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
+
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
+        await connectDB();
+
         const user = await User.findOne({
-          where: { email: credentials.email },
-          attributes: ["id", "name", "email", "password", "role"],
-          raw: true,nano
-        });
+          email: credentials.email,
+        }).select("+password"); 
 
         if (!user || !user.password) return null;
 
@@ -31,10 +36,11 @@ const handler = NextAuth({
           credentials.password,
           user.password,
         );
+
         if (!isValid) return null;
 
         return {
-          id: user.id,
+          id: user._id.toString(),
           email: user.email,
           name: user.name,
           role: user.role,
@@ -42,6 +48,26 @@ const handler = NextAuth({
       },
     }),
   ],
+
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.role = user.role;
+      }
+      return token;
+    },
+
+    async session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id;
+        session.user.role = token.role;
+      }
+      return session;
+    },
+  },
+
+  secret: process.env.NEXTAUTH_SECRET,
 });
 
 export const GET = handler;

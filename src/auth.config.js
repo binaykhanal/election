@@ -1,12 +1,15 @@
+import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { User } from "./models"; // make sure this is correct
-import NextAuth from "next-auth";
+
+import connectDB from "./lib/server/db.js";
+import { User } from "./models/index.js";
 
 export default NextAuth({
   session: {
     strategy: "jwt",
   },
+
   providers: [
     Credentials({
       name: "Credentials",
@@ -14,24 +17,27 @@ export default NextAuth({
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
       },
+
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
 
+        await connectDB();
+
         const user = await User.findOne({
-          where: { email: credentials.email },
-          raw: true,
+          email: credentials.email,
         });
 
-        if (!user || !user.password) return null;
+        if (!user) return null;
 
         const isValid = await bcrypt.compare(
           credentials.password,
           user.password,
         );
+
         if (!isValid) return null;
 
         return {
-          id: user.id,
+          id: user._id.toString(),
           email: user.email,
           name: user.name,
           role: user.role,
@@ -39,6 +45,7 @@ export default NextAuth({
       },
     }),
   ],
+
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -47,6 +54,7 @@ export default NextAuth({
       }
       return token;
     },
+
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id;
@@ -55,10 +63,13 @@ export default NextAuth({
       return session;
     },
   },
+
   secret: process.env.NEXTAUTH_SECRET,
+
   pages: {
-    signIn: "/admin/login", // custom login page
+    signIn: "/admin/login",
   },
+
   cookies: {
     sessionToken: {
       name: "__Secure-next-auth.session-token",
@@ -66,7 +77,7 @@ export default NextAuth({
         httpOnly: true,
         sameSite: "lax",
         path: "/",
-        secure: process.env.NODE_ENV === "production", // secure in prod
+        secure: process.env.NODE_ENV === "production",
       },
     },
   },

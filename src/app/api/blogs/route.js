@@ -1,14 +1,17 @@
 import { Blog } from "@/models";
+import connectDB from "@/lib/server/db.js";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const blogs = await Blog.findAll({
-      order: [["publishedAt", "DESC"]],
-    });
+    await connectDB();
+
+    const blogs = await Blog.find().sort({ publishedAt: -1 }).lean();
+
     return NextResponse.json(blogs);
   } catch (error) {
-    console.error("Sequelize Fetch Error:", error);
+    console.error("Mongo Fetch Error:", error);
+
     return NextResponse.json(
       { error: "Failed to fetch blogs" },
       { status: 500 },
@@ -18,6 +21,8 @@ export async function GET() {
 
 export async function POST(request) {
   try {
+    await connectDB();
+
     const data = await request.json();
 
     if (!data.titleEn || !data.titleNp) {
@@ -36,7 +41,7 @@ export async function POST(request) {
     const blog = await Blog.create({
       titleEn: data.titleEn,
       titleNp: data.titleNp,
-      slug: slug,
+      slug,
       contentEn: data.contentEn,
       contentNp: data.contentNp,
       excerptEn: data.excerptEn,
@@ -48,11 +53,11 @@ export async function POST(request) {
 
     return NextResponse.json(blog);
   } catch (error) {
-    console.error("DETAILED DATABASE ERROR:", error);
+    console.error("Mongo Create Error:", error);
 
-    if (error.name === "SequelizeUniqueConstraintError") {
+    if (error.code === 11000) {
       return NextResponse.json(
-        { error: "A blog with this title/slug already exists." },
+        { error: "A blog with this slug already exists." },
         { status: 400 },
       );
     }

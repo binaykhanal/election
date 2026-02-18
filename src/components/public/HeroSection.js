@@ -26,7 +26,10 @@ export function HeroSection({ data }) {
   }, [data]);
 
   useEffect(() => {
-    const targetDate = new Date("2026-03-05T07:00:00").getTime();
+    // Target date now comes from backend or defaults to March 5, 2026
+    const electionDate = content?.election_date || "2026-03-05T07:00:00";
+    const targetDate = new Date(electionDate).getTime();
+
     const interval = setInterval(() => {
       const now = new Date().getTime();
       const distance = targetDate - now;
@@ -41,7 +44,7 @@ export function HeroSection({ data }) {
       });
     }, 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [content?.election_date]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -112,7 +115,8 @@ export function HeroSection({ data }) {
           </div>
         </div>
         <p className="mt-2 text-[9px] font-black text-red-600 uppercase tracking-[0.2em] mr-2">
-          {isNp ? "निर्वाचन बाँकी समय" : "Days Until Election"}
+          {content.countdown_label ||
+            (isNp ? "निर्वाचन बाँकी समय" : "Days Until Election")}
         </p>
       </div>
 
@@ -124,8 +128,8 @@ export function HeroSection({ data }) {
           className="absolute top-[10%] left-0 md:left-[25%] w-full max-w-4xl mix-blend-screen grayscale brightness-150 px-10 md:px-0"
         >
           <img
-            src="/images/hammer-sickle.png"
-            alt="Maoist Flag"
+            src={content.bg_symbol || "/images/hammer-sickle.png"}
+            alt="Party Symbol"
             className="w-full h-auto object-contain"
           />
         </motion.div>
@@ -142,9 +146,13 @@ export function HeroSection({ data }) {
             <div className="inline-flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 backdrop-blur-2xl rounded-full mb-6 md:mb-10 shadow-2xl">
               <span className="flex h-2 w-2 rounded-full bg-red-600 animate-pulse shadow-[0_0_10px_rgba(220,38,38,1)]" />
               <span className="text-[9px] md:text-[11px] font-black tracking-[0.1em] text-white uppercase">
-                {isNp ? "नेपाली कम्युनिष्ट पार्टी" : "Nepali Communist Party"}
+                {content.party_name ||
+                  (isNp
+                    ? "नेपाली कम्युनिष्ट पार्टी"
+                    : "Nepali Communist Party")}
               </span>
             </div>
+
             <h1 className="text-5xl md:text-[110px] font-black tracking-[-0.06em] text-white leading-tight mb-6">
               <span className="block bg-gradient-to-br from-white to-gray-500 bg-clip-text text-transparent">
                 {content.name}
@@ -153,14 +161,16 @@ export function HeroSection({ data }) {
                 ({content.nickname})
               </span>
             </h1>
+
             <p className="text-base md:text-xl text-white/50 max-w-2xl mx-auto lg:mx-0 mb-10 border-l-2 border-red-600/40 pl-4 italic">
               {content.description}
             </p>
+
             <Link
               href={`/${locale}/vision`}
               className="group inline-flex items-center gap-4 bg-red-600 text-white px-8 md:px-10 py-4 md:py-5 rounded-xl md:rounded-2xl font-black text-base md:text-lg hover:bg-red-500 transition-all shadow-xl"
             >
-              {isNp ? "हाम्रो लक्ष्य" : "OUR VISION"}
+              {content.cta_text || (isNp ? "हाम्रो लक्ष्य" : "OUR VISION")}
               <ArrowRight className="group-hover:translate-x-2 transition-transform w-5 h-5" />
             </Link>
           </motion.div>
@@ -179,10 +189,11 @@ export function HeroSection({ data }) {
                   className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+
                 <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 p-4 md:p-5 bg-white/10 backdrop-blur-3xl border border-white/20 rounded-[1.5rem] md:rounded-[2rem] flex items-center gap-4 md:gap-5">
                   <div className="relative w-12 h-12 md:w-16 md:h-16 bg-white rounded-lg md:rounded-xl p-1 md:p-1.5 flex items-center justify-center shrink-0 overflow-hidden">
                     <img
-                      src="/images/star.png"
+                      src={content.election_symbol || "/images/star.png"}
                       alt="Symbol"
                       className="w-full h-full object-contain"
                     />
@@ -202,13 +213,14 @@ export function HeroSection({ data }) {
                     </AnimatePresence>
                   </div>
                   <div className="text-left">
-                    <h3 className="text-white font-black text-sm  md:text-xl uppercase tracking-tight  max-w-[150px] md:max-w-none">
+                    <h3 className="text-white font-black text-sm md:text-xl uppercase tracking-tight truncate max-w-[150px] md:max-w-none">
                       {content.name}
                     </h3>
                     <p className="text-white/60 text-[9px] md:text-[11px] font-bold uppercase tracking-widest truncate">
-                      {isNp
-                        ? "उम्मेदवार • भक्तपुर-२"
-                        : "CANDIDATE • BHAKTAPUR-2"}
+                      {content.candidate_title ||
+                        (isNp
+                          ? "उम्मेदवार • भक्तपुर-२"
+                          : "CANDIDATE • BHAKTAPUR-2")}
                     </p>
                   </div>
                 </div>

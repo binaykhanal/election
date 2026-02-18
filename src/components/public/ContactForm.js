@@ -1,11 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { Send, CheckCircle, Loader2 } from "lucide-react";
 
 export function ContactForm() {
   const t = useTranslations("contact.form");
+
+  const locale = useLocale();
+  const isNp = locale === "np";
+
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
@@ -45,14 +49,18 @@ export function ContactForm() {
       <div className="text-center py-12">
         <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
         <h3 className="text-2xl font-bold text-gray-900 mb-2">
-          {t("success")}
+          {isNp ? "सन्देश सफलतापूर्वक पठाइयो!" : "Message Sent Successfully!"}
         </h3>
-        <p className="text-gray-600">We will get back to you soon.</p>
+        <p className="text-gray-600">
+          {isNp
+            ? "हामी चाँडै तपाईंलाई सम्पर्क गर्नेछौं।"
+            : "We will get back to you soon."}
+        </p>
         <button
           onClick={() => setIsSubmitted(false)}
           className="mt-6 text-red-600 hover:underline font-medium"
         >
-          Send another message
+          {isNp ? "फेरी सन्देश पठाउनुहोस्" : "Send another message"}
         </button>
       </div>
     );
@@ -133,7 +141,13 @@ export function ContactForm() {
         ) : (
           <Send className="w-5 h-5" />
         )}
-        {isSubmitting ? "Sending..." : t("submit")}
+        {isSubmitting
+          ? isNp
+            ? "पठाइँदै..."
+            : "Sending..."
+          : isNp
+            ? "पठाउनुहोस्"
+            : "Submit"}
       </button>
     </form>
   );

@@ -20,18 +20,26 @@ const ICONS = {
 
 export function VisionContent({ data }) {
   const locale = useLocale();
+  const isNp = locale === "np";
 
   function decodeHtml(html) {
     const txt = document.createElement("textarea");
     txt.innerHTML = html;
     return txt.value;
   }
+
   const visionAreas = data?.vision_items || [];
   const commitments = data?.commitments || [];
-  const manifestoHtml = decodeHtml(data.manifesto_subtitle);
+  const manifestoHtml = decodeHtml(data.manifesto_subtitle || "");
+
+  const labels = {
+    manifesto: isNp ? "हाम्रो घोषणापत्र" : "Our Manifesto",
+    officialManifesto: isNp ? "अधिकारिक घोषणापत्र" : "Official Manifesto",
+    commitment: isNp ? "हाम्रो अटूट प्रतिबद्धता" : "Our Solemn Commitment",
+  };
 
   return (
-    <div className="space-y-24 ">
+    <div className="space-y-24">
       <div className="relative overflow-hidden bg-gradient-to-r from-red-700 to-red-600 rounded-[3rem] p-10 md:p-16 text-white shadow-2xl">
         <Image
           src="/images/hammer-sickle.png"
@@ -42,24 +50,15 @@ export function VisionContent({ data }) {
         />
         <div className="relative z-10 flex flex-col items-center text-center">
           <span className="bg-white/20 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4">
-            Official Manifesto
+            {labels.officialManifesto}
           </span>
           <h2 className="text-4xl md:text-6xl font-black mb-6 tracking-tighter uppercase italic">
-            {data.manifesto_header ||
-              (locale === "np" ? "हाम्रो घोषणापत्र" : "Our Manifesto")}
+            {data.manifesto_header || labels.manifesto}
           </h2>
 
           {data.manifesto_subtitle && (
             <div
-              className="
-          prose prose-invert
-          prose-lg md:prose-xl
-          max-w-3xl
-          text-white/90
-          prose-headings:text-white
-          prose-strong:text-white
-          prose-a:text-white
-        "
+              className="prose prose-invert prose-lg md:prose-xl max-w-3xl text-white/90 prose-headings:text-white prose-strong:text-white prose-a:text-white"
               dangerouslySetInnerHTML={{ __html: manifestoHtml }}
             />
           )}
@@ -118,7 +117,7 @@ export function VisionContent({ data }) {
           <div className="bg-white rounded-[2.8rem] p-12 md:p-20">
             <div className="text-center mb-16">
               <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-4 tracking-tighter uppercase italic">
-                Our Solemn Commitment
+                {labels.commitment}
               </h2>
               <div className="h-1.5 w-20 bg-red-600 mx-auto rounded-full" />
             </div>
@@ -126,12 +125,12 @@ export function VisionContent({ data }) {
             <div className="grid md:grid-cols-3 gap-12">
               {commitments.map((c, i) => (
                 <div key={i} className="relative text-center group">
-                  <div className=" text-2xl md:text-4xl font-black text-red-600 mb-4 tracking-tighter flex items-center justify-center gap-1">
+                  <div className="text-2xl md:text-4xl font-black text-red-600 mb-4 tracking-tighter flex items-center justify-center gap-1">
                     {c.value}
                     <Star className="w-6 h-6 fill-red-600" />
                   </div>
                   <p className="text-gray-900 text-xl font-black uppercase tracking-tight leading-tight">
-                    {c.text}
+                    {isNp ? c.textNp || c.text : c.text}
                   </p>
                   {i < commitments.length - 1 && (
                     <div className="hidden md:block absolute top-1/2 -right-6 h-12 w-px bg-gray-100 -translate-y-1/2" />

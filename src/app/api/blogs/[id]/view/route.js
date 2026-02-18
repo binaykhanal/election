@@ -6,8 +6,9 @@ import { Blog } from "@/models";
 export async function POST(request, { params }) {
   try {
     await connectDB();
+    const resolvedParams = await params;
 
-    const { id } = params;
+    const { id } = resolvedParams;
 
     if (!id) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });

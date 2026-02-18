@@ -10,6 +10,7 @@ export function BlogsList() {
   const [loading, setLoading] = useState(true);
   const locale = useLocale();
   const t = useTranslations("blogs");
+  const isNp = locale === "np";
 
   useEffect(() => {
     async function fetchBlogs() {
@@ -19,7 +20,11 @@ export function BlogsList() {
           const data = await res.json();
           const published = data
             .filter((b) => b.published)
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            .sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime(),
+            );
           setBlogs(published);
         }
       } catch (error) {
@@ -31,33 +36,31 @@ export function BlogsList() {
     fetchBlogs();
   }, []);
 
-  if (loading) {
+  if (loading)
     return (
       <div className="flex justify-center py-20">
         <Loader2 className="w-10 h-10 animate-spin text-communist-red" />
       </div>
     );
-  }
 
-  if (blogs.length === 0) {
+  if (blogs.length === 0)
     return (
       <div className="text-center py-20 text-gray-500">
-        No blog posts found.
+        {isNp ? "ब्लगहरू फेला परेनन्।" : "No blog posts found."}
       </div>
     );
-  }
 
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {blogs.map((blog) => (
+      {blogs.map((blog, idx) => (
         <article
-          key={blog.id}
+          key={blog._id}
           className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow"
         >
           <div className="h-52 overflow-hidden">
             <img
               src={blog.featuredImage || "/images/placeholder.jpg"}
-              alt={locale === "np" ? blog.titleNp : blog.titleEn}
+              alt={isNp ? blog.titleNp : blog.titleEn}
               className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
             />
           </div>
@@ -65,14 +68,14 @@ export function BlogsList() {
             <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
               <Calendar className="w-4 h-4" />
               {new Date(blog.createdAt).toLocaleDateString(
-                locale === "np" ? "ne-NP" : "en-US",
+                isNp ? "ne-NP" : "en-US",
               )}
             </div>
             <h2 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
-              {locale === "np" ? blog.titleNp : blog.titleEn}
+              {isNp ? blog.titleNp : blog.titleEn}
             </h2>
             <p className="text-gray-600 mb-4 line-clamp-3">
-              {locale === "np" ? blog.excerptNp : blog.excerptEn}
+              {isNp ? blog.excerptNp : blog.excerptEn}
             </p>
             <Link
               href={`/${locale}/blogs/${blog.slug}`}

@@ -9,6 +9,7 @@ import { MapPin, Phone, Mail, ChevronRight } from "lucide-react";
 export default function ContactPage() {
   const t = useTranslations("contact");
   const locale = useLocale();
+  const isNp = locale === "np";
   const [settings, setSettings] = useState({});
 
   useEffect(() => {
@@ -46,7 +47,6 @@ export default function ContactPage() {
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
           }}
         />
-
         <div className="absolute top-20 -left-20 opacity-[0.07] rotate-12 blur-[1px]">
           <Image
             src="/images/hammer-sickle.png"
@@ -77,11 +77,9 @@ export default function ContactPage() {
                 </span>
               ))}
           </h1>
-
           <p className="text-xl text-gray-600 leading-relaxed font-medium">
             {t("subtitle")}
           </p>
-
           <div className="flex items-center justify-center gap-3 mt-8">
             <div className="h-1 w-12 bg-red-600 rounded-full"></div>
             <Image
@@ -94,10 +92,10 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-5 gap-8 max-w-7xl mx-auto  relative">
-          <div className="lg:col-span-2 space-y-6 ">
-            <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] p-2 md:p-10 border border-white hover:border-red-100 transition-all duration-500">
-              <div className="absolute top-2 right-2 px-4 py-2 rounded-full  mb-6 shadow-sm">
+        <div className="grid lg:grid-cols-5 gap-8 max-w-7xl mx-auto relative">
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white/80 backdrop-blur-md rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.05)] p-2 md:p-10 border border-white hover:border-red-100 transition-all duration-500 relative">
+              <div className="absolute top-2 right-2 px-4 py-2 rounded-full mb-6 shadow-sm">
                 <Image
                   src="/images/star.png"
                   alt="Star"
@@ -106,8 +104,9 @@ export default function ContactPage() {
                   className="animate-pulse"
                 />
               </div>
+
               <div className="flex items-center gap-3 mb-10">
-                <div className="w-10 h-10 rounded-xl bg-red-600 flex items-center justify-center shadow-lg shadow-red-200">
+                <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center shadow-lg shadow-red-200">
                   <Image
                     src="/images/star.png"
                     alt=""
@@ -117,7 +116,7 @@ export default function ContactPage() {
                   />
                 </div>
                 <h2 className="text-2xl font-black text-gray-900 tracking-tight italic uppercase">
-                  Direct Info
+                  {isNp ? "प्रत्यक्ष जानकारी" : "Direct Info"}
                 </h2>
               </div>
 
@@ -125,17 +124,17 @@ export default function ContactPage() {
                 {[
                   {
                     icon: MapPin,
-                    label: t("address"),
+                    label: isNp ? "ठेगाना" : "Address",
                     value: getVal("officeAddress", "Bhaktapur-2, Nepal"),
                   },
                   {
                     icon: Phone,
-                    label: t("phone"),
+                    label: isNp ? "फोन" : "Phone",
                     value: getVal("phoneNumber", "+977-XXXXXXXXXX"),
                   },
                   {
                     icon: Mail,
-                    label: t("email"),
+                    label: isNp ? "इमेल" : "Email",
                     value: getVal(
                       "contactEmail",
                       "contact@ramprasadsapkota.com",
@@ -143,7 +142,7 @@ export default function ContactPage() {
                   },
                 ].map((item, idx) => (
                   <div key={idx} className="group flex items-start gap-5">
-                    <div className="bg-gray-50 p-4 rounded-2xl group-hover:bg-red-600 group-hover:text-white transition-all duration-300 shadow-sm">
+                    <div className="bg-gray-50 p-4 rounded-full group-hover:bg-red-600 group-hover:text-white transition-all duration-300 shadow-sm">
                       <item.icon className="w-6 h-6 shrink-0" />
                     </div>
                     <div>
@@ -161,7 +160,9 @@ export default function ContactPage() {
               <div className="mt-12 p-6 rounded-2xl bg-gradient-to-br from-red-600 to-red-700 text-white overflow-hidden relative">
                 <div className="relative z-10 flex items-center justify-between">
                   <span className="font-bold text-sm tracking-tight uppercase">
-                    Support the Vision
+                    {isNp
+                      ? "दृष्टिकोणलाई समर्थन गर्नुहोस्"
+                      : "Support the Vision"}
                   </span>
                   <ChevronRight className="w-5 h-5 opacity-50" />
                 </div>
@@ -182,7 +183,7 @@ export default function ContactPage() {
 
               <div className="mb-8">
                 <h2 className="text-3xl font-black text-gray-900 tracking-tighter mb-2">
-                  Send a Message
+                  {isNp ? "सन्देश पठाउनुहोस्" : "Send a Message"}
                 </h2>
                 <div className="h-1 w-12 bg-red-600 rounded-full"></div>
               </div>

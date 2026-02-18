@@ -26,7 +26,6 @@ export function HeroSection({ data }) {
   }, [data]);
 
   useEffect(() => {
-    // Target date now comes from backend or defaults to March 5, 2026
     const electionDate = content?.election_date || "2026-03-05T07:00:00";
     const targetDate = new Date(electionDate).getTime();
 

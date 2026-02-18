@@ -4,15 +4,15 @@ import { useTranslations, useLocale } from "next-intl";
 import { VisionContent } from "@/components/public/VisionContent";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Loader2, PlayCircle, Youtube } from "lucide-react";
+import { Loader2, Youtube } from "lucide-react";
 
 export default function VisionPage() {
   const t = useTranslations("vision");
   const locale = useLocale();
+  const isNp = locale === "np";
+
   const [visionData, setVisionData] = useState(null);
   const [loading, setLoading] = useState(true);
-
- 
 
   useEffect(() => {
     async function loadVision() {
@@ -20,8 +20,7 @@ export default function VisionPage() {
         const res = await fetch("/api/content?page=vision&section=vision_page");
         const data = await res.json();
         const visionObj = data[0] || {};
-        const contentStr =
-          locale === "np" ? visionObj.valueNp : visionObj.valueEn;
+        const contentStr = isNp ? visionObj.valueNp : visionObj.valueEn;
         setVisionData(contentStr ? JSON.parse(contentStr) : null);
       } catch (err) {
         console.error("Failed to load vision content:", err);
@@ -30,7 +29,7 @@ export default function VisionPage() {
       }
     }
     loadVision();
-  }, [locale]);
+  }, [isNp]);
 
   const getEmbedUrl = (url) => {
     if (!url) return null;
@@ -60,11 +59,15 @@ export default function VisionPage() {
     );
 
   if (!visionData)
-    return <div className="text-center py-20">No data Found.</div>;
+    return (
+      <div className="text-center py-20">
+        {isNp ? "डेटा फेला परेन।" : "No data found."}
+      </div>
+    );
 
   return (
     <div className="min-h-screen bg-[#fffafa] relative overflow-hidden">
-      <div className=" absolute top-40 -right-20 opacity-[0.03] rotate-45 hidden lg:block">
+      <div className="absolute top-40 -right-20 opacity-[0.03] rotate-45 hidden lg:block">
         <Image
           src="/images/hammer-sickle.png"
           alt=""
@@ -94,7 +97,7 @@ export default function VisionPage() {
             <div className="h-1.5 w-16 bg-red-600 rounded-full" />
             <Image
               src="/images/hammer-sickle.png"
-              alt="Symbol"
+              alt={isNp ? "चिन्ह" : "Symbol"}
               width={40}
               height={40}
             />
@@ -102,17 +105,17 @@ export default function VisionPage() {
           </div>
         </div>
 
-        <VisionContent data={visionData} />
+        <VisionContent data={visionData} isNp={isNp} />
 
         {visionData?.videos?.length > 0 && (
           <div className="mt-32">
             <div className="flex flex-col items-center mb-12">
               <div className="flex items-center gap-3 text-red-600 font-bold tracking-widest uppercase text-sm mb-2">
                 <Youtube className="w-5 h-5" />
-                <span>Media & Updates</span>
+                <span>{isNp ? "मीडिया & अपडेट्स" : "Media & Updates"}</span>
               </div>
               <h2 className="text-2xl md:text-4xl font-black text-gray-900 tracking-tight">
-                CAMPAIGN HIGHLIGHTS
+                {isNp ? "अभियान हाइलाइट्स" : "Campaign Highlights"}
               </h2>
             </div>
 

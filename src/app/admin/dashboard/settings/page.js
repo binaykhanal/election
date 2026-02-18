@@ -28,6 +28,7 @@ export default function SettingsPage() {
     facebookUrl: { en: "", np: "" },
     twitterUrl: { en: "", np: "" },
     youtubeUrl: { en: "", np: "" },
+    instagramUrl: { en: "", np: "" },
   });
 
   useEffect(() => {
@@ -191,6 +192,12 @@ export default function SettingsPage() {
                 onUpd={handleUpdate}
               />
               <SettingInput
+                label="Instagram Page URL"
+                k="instagramUrl"
+                val={settings.instagramUrl}
+                onUpd={handleUpdate}
+              />
+              <SettingInput
                 label="YouTube Channel URL"
                 k="youtubeUrl"
                 val={settings.youtubeUrl}
@@ -205,7 +212,7 @@ export default function SettingsPage() {
 }
 
 function SettingInput({ label, k, val, onUpd }) {
-  const [lang, setLang] = useState("en"); // Local toggle state
+  const [lang, setLang] = useState("en");
 
   return (
     <div className="flex flex-col space-y-2 pb-6 border-b border-gray-100 last:border-0">
@@ -214,7 +221,6 @@ function SettingInput({ label, k, val, onUpd }) {
           {label}
         </label>
 
-        {/* Language Mini-Tabs */}
         <div className="flex bg-gray-100 p-1 rounded-lg">
           <button
             onClick={() => setLang("en")}

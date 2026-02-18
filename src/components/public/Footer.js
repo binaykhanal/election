@@ -45,6 +45,14 @@ export function PublicFooter() {
     return settings[key]?.[locale] || settings[key]?.en || defaultVal;
   };
 
+  // Ensure external URLs have proper protocol
+  const normalizeUrl = (url) => {
+    if (!url) return "#";
+    return url.startsWith("http://") || url.startsWith("https://")
+      ? url
+      : `https://${url}`;
+  };
+
   const quickLinks = [
     { href: "/", label: navT("home") },
     { href: "/about", label: navT("about") },
@@ -67,30 +75,36 @@ export function PublicFooter() {
               )}
             </h3>
             <p className="text-gray-400 mb-4">{t("tagline")}</p>
+
             <div className="flex gap-4">
               <a
-                href={settings.facebookUrl?.en || "#"}
+                href={normalizeUrl(settings.facebookUrl?.en)}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-communist-red transition-colors"
               >
                 <Facebook className="w-5 h-5" />
               </a>
               <a
-                href={settings.twitterUrl?.en || "#"}
+                href={normalizeUrl(settings.twitterUrl?.en)}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-communist-red transition-colors"
               >
                 <Twitter className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href={normalizeUrl(settings.instagramUrl?.en)}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-communist-red transition-colors"
               >
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href={settings.youtubeUrl?.en || "#"}
+                href={normalizeUrl(settings.youtubeUrl?.en)}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-communist-red transition-colors"
               >
                 <Youtube className="w-5 h-5" />

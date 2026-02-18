@@ -43,13 +43,6 @@ const CkEditor = dynamic(() => import("@/components/editor/CkEditor"), {
   ssr: false,
 });
 
-// const ReactQuill = dynamic(() => import("react-quill-new"), {
-//   ssr: false,
-//   loading: () => (
-//     <div className="h-64 bg-gray-50 animate-pulse rounded-lg border" />
-//   ),
-// });
-
 const HERO_FIELDS = [
   { id: "tagline", label: "Tagline", labelNp: "ट्यागलाइन" },
   { id: "name", label: "Candidate Name", labelNp: "उम्मेदवारको नाम" },
@@ -290,18 +283,26 @@ export default function ContentManagementPage() {
     const oldContent = contentMap[activeTab]?.[lang] || "";
     const oldImages = extractImagesFromHTML(oldContent);
     const newImages = extractImagesFromHTML(value);
-    const removedImages = oldImages.filter((img) => !newImages.includes(img));
+    const removedImages = oldImages.filter(
+      (img) => img && !newImages.includes(img),
+    );
     for (let img of removedImages) {
+      if (!img) continue; // skip null/undefined
+
       try {
+        const filename = img.split("/").pop();
+        if (!filename) continue; // skip empty filenames
+
         await fetch("/api/upload", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url: img }),
+          body: JSON.stringify({ filename }),
         });
       } catch (err) {
         console.error("Image delete failed:", err);
       }
     }
+
     setPreviousImages((prev) => ({ ...prev, [key]: newImages }));
     setContentMap((prev) => ({
       ...prev,

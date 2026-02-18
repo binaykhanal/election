@@ -21,7 +21,6 @@ class MyUploadAdapter {
           formData.append("upload", file);
 
           fetch(`${API_BASE_URL}/api/upload`, {
-            // <-- dynamic URL
             method: "POST",
             body: formData,
           })

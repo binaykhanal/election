@@ -14,7 +14,22 @@ export function ExperienceContent({
   politicalExperience = [],
   socialWork = [],
   education = [],
+  locale = "en",
 }) {
+  const sectionTitles = {
+    politicalExperience: {
+      en: "Leadership Timeline",
+      ne: "नेतृत्व समयरेखा",
+    },
+    socialWork: {
+      en: "Social Contributions",
+      ne: "सामाजिक योगदान",
+    },
+    education: {
+      en: "Education",
+      ne: "शिक्षा",
+    },
+  };
   return (
     <div className="space-y-32">
       {politicalExperience?.length > 0 && (
@@ -22,7 +37,7 @@ export function ExperienceContent({
           <div className="flex items-center gap-4 mb-16 justify-center">
             <div className="h-px w-12 bg-red-600" />
             <h2 className=" text-lg md:text-3xl font-black text-gray-900 tracking-tighter uppercase italic">
-              Leadership Timeline
+              {sectionTitles.politicalExperience[locale]}
             </h2>
             <div className="h-px w-12 bg-red-600" />
           </div>
@@ -95,7 +110,7 @@ export function ExperienceContent({
           </div>
           <div className="relative z-10">
             <h2 className=" text-2xl  md:text-4xl font-black mb-12 tracking-tighter uppercase italic text-center">
-              Social Contributions
+              {sectionTitles.socialWork[locale]}{" "}
             </h2>
             <div className="grid md:grid-cols-3 gap-8">
               {socialWork.map((work, index) => (
@@ -141,7 +156,7 @@ export function ExperienceContent({
             <div className="bg-gray-900 p-12 text-white flex flex-col justify-center items-center md:w-1/3">
               <BookOpen className="w-16 h-16 mb-4 text-red-600" />
               <h2 className="text-2xl font-black tracking-tight text-center uppercase">
-                Education
+                {sectionTitles.education[locale]}
               </h2>
             </div>
             <div className="p-12 md:w-2/3 space-y-8 bg-[#fafafa]">

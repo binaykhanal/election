@@ -224,6 +224,7 @@ export default function NewBlogPage() {
                   : "पूर्ण सामग्री (NP)"}
               </label>
               <CkEditor
+                key={activeTab}
                 editorData={
                   activeTab === "en" ? formData.contentEn : formData.contentNp
                 }

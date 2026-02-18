@@ -1,5 +1,5 @@
-import sequelize from "@/lib/server/db";
-import { User } from "@/models";
+import sequelize from "@/lib/server/db.js";
+import { User } from "@/models/index.js";
 import bcrypt from "bcryptjs";
 // adjust path if needed
 

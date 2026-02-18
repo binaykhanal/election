@@ -12,11 +12,7 @@ export default function VisionPage() {
   const [visionData, setVisionData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  function decodeHtml(html) {
-    const txt = document.createElement("textarea");
-    txt.innerHTML = html;
-    return txt.value;
-  }
+ 
 
   useEffect(() => {
     async function loadVision() {

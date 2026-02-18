@@ -69,7 +69,7 @@ export default async function BlogDetailPage({ params }) {
         </header>
 
         <div
-          className="blog-content"
+          className="ck-content"
           dangerouslySetInnerHTML={{ __html: content }}
         />
       </article>

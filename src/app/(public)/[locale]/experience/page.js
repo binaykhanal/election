@@ -1,12 +1,13 @@
 "use client";
-import { useTranslations, useLocale } from "next-intl";
+
+import { useLocale } from "next-intl";
 import { ExperienceContent } from "@/components/public/ExperienceContent";
 import { useEffect, useState } from "react";
-import { Loader2, VideoIcon, Youtube, Star } from "lucide-react";
+import { Loader2, Youtube } from "lucide-react";
 import Image from "next/image";
 
 export default function ExperiencePage() {
-  const locale = useLocale();
+  const locale = useLocale(); // "en" or "np"
   const [experienceData, setExperienceData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -78,18 +79,21 @@ export default function ExperiencePage() {
                 className="animate-pulse"
               />
               <span className="text-xs font-black uppercase tracking-widest text-red-600">
-                Leader Profile
+                {locale === "np" ? "नेतृत्व प्रोफाइल" : "Leader Profile"}
               </span>
             </div>
           </div>
 
           <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 tracking-tighter uppercase italic leading-none">
-            {experienceData?.pageTitle || "Political Journey"}
+            {experienceData?.pageTitle ||
+              (locale === "np" ? "राजनीतिक यात्रा" : "Political Journey")}
           </h1>
           <p className="text-xl md:text-2xl text-gray-500 font-medium italic max-w-2xl mx-auto border-t border-red-100 pt-6">
             "
             {experienceData?.pageSubtitle ||
-              "Dedicated to the prosperity of Bhaktapur-2"}
+              (locale === "np"
+                ? "भक्तपुर-२ को समृद्धिको लागि समर्पित"
+                : "Dedicated to the prosperity of Bhaktapur-2")}
             "
           </p>
         </div>
@@ -98,6 +102,7 @@ export default function ExperiencePage() {
           politicalExperience={experienceData?.politicalExperience || []}
           socialWork={experienceData?.socialWork || []}
           education={experienceData?.education || []}
+          locale={locale === "np" ? "ne" : "en"}
         />
 
         {experienceData?.videos?.length > 0 && (

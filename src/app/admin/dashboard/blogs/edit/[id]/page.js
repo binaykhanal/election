@@ -244,6 +244,7 @@ export default function EditBlogPage() {
                 {activeTab === "en" ? "Content (EN)" : "सामग्री (NP)"}
               </label>
               <CkEditor
+                key={activeTab}
                 editorData={
                   activeTab === "en" ? formData.contentEn : formData.contentNp
                 }

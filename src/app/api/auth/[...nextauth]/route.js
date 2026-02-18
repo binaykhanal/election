@@ -22,7 +22,7 @@ const handler = NextAuth({
         const user = await User.findOne({
           where: { email: credentials.email },
           attributes: ["id", "name", "email", "password", "role"],
-          raw: true,
+          raw: true,nano
         });
 
         if (!user || !user.password) return null;

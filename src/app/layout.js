@@ -1,4 +1,3 @@
-import SessionWrapper from "@/components/public/SessionWrapper";
 import "./globals.css";
 
 export const metadata = {
@@ -7,11 +6,5 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <body>
-        <SessionWrapper>{children}</SessionWrapper>
-      </body>
-    </html>
-  );
+  return children;
 }

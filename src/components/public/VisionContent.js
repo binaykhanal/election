@@ -134,45 +134,50 @@ export function VisionContent({ data, isNp }) {
 
       <AnimatePresence>
         {selectedVision && (
-          <div className="fixed inset-0 z-[9999] flex items-end md:items-center justify-center">
+          <div className="fixed inset-0 z-[10000] flex items-end md:items-center justify-center p-0 md:p-4">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedVision(null)}
-              className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
             />
 
             <motion.div
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="relative w-full md:max-w-4xl bg-white rounded-t-[2rem] md:rounded-[2.5rem] shadow-2xl overflow-hidden h-[85vh] md:h-auto md:max-h-[85vh] flex flex-col"
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="relative w-full md:max-w-4xl bg-white rounded-t-[2rem] md:rounded-[2rem] shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
             >
-              <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto my-3 shrink-0 md:hidden" />
+              <div className="w-full bg-white pt-2 shrink-0 md:hidden">
+                <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto" />
+              </div>
 
               <div
-                className={`px-6 py-4 md:p-8 text-white flex items-center justify-between shrink-0 ${selectedVision.color || "bg-red-600"}`}
+                className={`sticky top-0 z-20 px-6 py-4 md:px-8 md:py-6 text-white flex items-center justify-between shrink-0 ${selectedVision.color || "bg-red-600"}`}
               >
                 <div className="flex items-center gap-3">
                   {(() => {
                     const Icon = ICONS[selectedVision.icon] || ICONS.default;
-                    return <Icon className="w-6 h-6 md:w-8 md:h-8" />;
+                    return (
+                      <Icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
+                    );
                   })()}
-                  <h3 className="text-lg md:text-2xl font-black uppercase truncate pr-4">
+                  <h3 className="text-base md:text-xl font-black uppercase truncate max-w-[200px] sm:max-w-md">
                     {selectedVision.title}
                   </h3>
                 </div>
                 <button
                   onClick={() => setSelectedVision(null)}
-                  className="bg-white/20 p-2 rounded-full hover:bg-white/30 transition-colors"
+                  className="bg-black/20 p-2 rounded-full hover:bg-black/40 transition-colors flex items-center justify-center shrink-0"
+                  aria-label="Close"
                 >
-                  <X size={20} className="md:w-6 md:h-6" />
+                  <X size={20} className="text-white" />
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-6 md:p-12 scrolling-touch">
+              <div className="flex-1 overflow-y-auto p-6 md:p-10 scrolling-touch">
                 <div
                   className="prose prose-sm md:prose-lg max-w-full text-gray-700 
                   prose-headings:text-gray-900 prose-headings:font-black prose-headings:uppercase
@@ -183,7 +188,7 @@ export function VisionContent({ data, isNp }) {
                   />
 
                   {selectedVision.points?.length > 0 && (
-                    <div className="mt-8 pt-8 border-t border-gray-100">
+                    <div className="mt-8 pt-8 border-t border-gray-100 pb-10">
                       <h4 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">
                         Key Highlights
                       </h4>
@@ -206,7 +211,6 @@ export function VisionContent({ data, isNp }) {
                     </div>
                   )}
                 </div>
-                <div className="h-10 md:hidden" />
               </div>
             </motion.div>
           </div>

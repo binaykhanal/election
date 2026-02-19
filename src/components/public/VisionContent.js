@@ -168,7 +168,7 @@ export function VisionContent({ data, isNp }) {
                       <Icon className="w-6 h-6 md:w-8 md:h-8 text-white" />
                     );
                   })()}
-                  <h3 className="text-base md:text-xl font-black uppercase truncate max-w-[200px] sm:max-w-md">
+                  <h3 className="text-sm md:text-lg font-black uppercase  max-w-[200px] sm:max-w-md">
                     {selectedVision.title}
                   </h3>
                 </div>

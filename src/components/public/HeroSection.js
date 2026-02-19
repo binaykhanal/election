@@ -1,20 +1,26 @@
 "use client";
+
 import { useState, useEffect, useMemo } from "react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
 import { ArrowRight, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
+
+function TikTokIcon({ className }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className}>
+      <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-1.885V15.5a5.5 5.5 0 1 1-5.5-5.5c.276 0 .548.02.813.06v3.07a2.5 2.5 0 1 0 2.687 2.494V2h3a4.79 4.79 0 0 0 2.77 4.686z" />
+    </svg>
+  );
+}
 
 export function HeroSection({ data }) {
   const locale = useLocale();
   const isNp = locale === "np" || locale === "ne";
   const [isStamped, setIsStamped] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    mins: 0,
-    secs: 0,
-  });
+  const [timeLeft, setTimeLeft] = useState(undefined);
+  const [settings, setSettings] = useState({});
 
   const content = useMemo(() => {
     if (!data) return null;
@@ -25,14 +31,44 @@ export function HeroSection({ data }) {
     }
   }, [data]);
 
+  const ELECTION_DATE = "2026-03-05T07:00:00+05:45";
+
   useEffect(() => {
-    const electionDate = content?.election_date || "2026-03-05T07:00:00";
-    const targetDate = new Date(electionDate).getTime();
+    async function fetchSettings() {
+      try {
+        const res = await fetch("/api/settings");
+        if (res.ok) {
+          const data = await res.json();
+          const settingsObj = data.reduce((acc, item) => {
+            acc[item.key] = {
+              en: item.valueEn || "",
+              np: item.valueNp || item.valueEn || "",
+            };
+            return acc;
+          }, {});
+          setSettings(settingsObj);
+        }
+      } catch (err) {}
+    }
+    fetchSettings();
+  }, []);
+
+  useEffect(() => {
+    const targetNepalTime = new Date(ELECTION_DATE).getTime();
 
     const interval = setInterval(() => {
-      const now = new Date().getTime();
-      const distance = targetDate - now;
-      if (distance < 0) return clearInterval(interval);
+      const nowNepal = new Date(
+        new Date().toLocaleString("en-US", { timeZone: "Asia/Kathmandu" }),
+      ).getTime();
+
+      const distance = targetNepalTime - nowNepal;
+
+      if (distance <= 0) {
+        clearInterval(interval);
+        setTimeLeft({ days: 0, hours: 0, mins: 0, secs: 0 });
+        return;
+      }
+
       setTimeLeft({
         days: Math.floor(distance / (1000 * 60 * 60 * 24)),
         hours: Math.floor(
@@ -42,8 +78,9 @@ export function HeroSection({ data }) {
         secs: Math.floor((distance % (1000 * 60)) / 1000),
       });
     }, 1000);
+
     return () => clearInterval(interval);
-  }, [content?.election_date]);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -63,59 +100,106 @@ export function HeroSection({ data }) {
       .join("");
   };
 
+  const getVal = (key) => {
+    return settings[key]?.[locale] || settings[key]?.en || "";
+  };
+
+  const normalizeUrl = (url) => {
+    if (!url) return "#";
+    return url.startsWith("http://") || url.startsWith("https://")
+      ? url
+      : `https://${url}`;
+  };
+
   if (!content) return null;
+
+  const socialLinks = [
+    { icon: Facebook, url: getVal("facebookUrl") },
+    { icon: Twitter, url: getVal("twitterUrl") },
+    { icon: Instagram, url: getVal("instagramUrl") },
+    { icon: Youtube, url: getVal("youtubeUrl") },
+    { icon: TikTokIcon, url: getVal("tiktokUrl") },
+  ].filter((item) => item.url);
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#070101] font-sans pt-20 md:pt-0">
+      <div className="hidden lg:flex absolute left-8 top-1/2 -translate-y-1/2 z-30">
+        <div className="flex flex-col gap-4 bg-white/5 backdrop-blur-2xl border border-white/10 p-4 rounded-3xl shadow-2xl">
+          {socialLinks.map((item, i) => {
+            const Icon = item.icon;
+            return (
+              <a
+                key={i}
+                href={normalizeUrl(item.url)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 flex items-center justify-center rounded-full bg-white/10 hover:bg-red-600 transition-all duration-300 hover:scale-110 hover:shadow-lg"
+              >
+                <Icon className="w-5 h-5 text-white" />
+              </a>
+            );
+          })}
+        </div>
+      </div>
+
       <div className="hidden md:flex absolute top-8 right-8 z-30 flex-col items-end">
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 p-4 rounded-3xl shadow-2xl flex gap-4 items-center">
           <Clock className="text-red-500 w-5 h-5 animate-pulse shrink-0" />
-          <div className="flex gap-3">
-            {[
-              {
-                label: "D",
-                np: "दिन",
-                val: timeLeft.days,
-                valNp: toNP(timeLeft.days),
-              },
-              {
-                label: "H",
-                np: "घण्टा",
-                val: timeLeft.hours,
-                valNp: toNP(timeLeft.hours),
-              },
-              {
-                label: "M",
-                np: "मिनेट",
-                val: timeLeft.mins,
-                valNp: toNP(timeLeft.mins),
-              },
-              {
-                label: "S",
-                np: "सेकेन्ड",
-                val: timeLeft.secs,
-                valNp: toNP(timeLeft.secs),
-              },
-            ].map((item, i) => (
-              <div key={i} className="flex flex-col items-center">
-                <div className="flex items-baseline gap-0.5">
-                  <span className="text-xl font-black text-white tabular-nums">
-                    {item.val}
-                  </span>
-                  <span className="text-xs font-bold text-red-500/80">
-                    {item.valNp}
+          {timeLeft === undefined ? null : timeLeft.days +
+              timeLeft.hours +
+              timeLeft.mins +
+              timeLeft.secs >
+            0 ? (
+            <div className="flex gap-3">
+              {[
+                {
+                  label: "D",
+                  np: "दिन",
+                  val: timeLeft.days,
+                  valNp: toNP(timeLeft.days),
+                },
+                {
+                  label: "H",
+                  np: "घण्टा",
+                  val: timeLeft.hours,
+                  valNp: toNP(timeLeft.hours),
+                },
+                {
+                  label: "M",
+                  np: "मिनेट",
+                  val: timeLeft.mins,
+                  valNp: toNP(timeLeft.mins),
+                },
+                {
+                  label: "S",
+                  np: "सेकेन्ड",
+                  val: timeLeft.secs,
+                  valNp: toNP(timeLeft.secs),
+                },
+              ].map((item, i) => (
+                <div key={i} className="flex flex-col items-center">
+                  <div className="flex items-baseline gap-0.5">
+                    <span className="text-xl font-black text-white tabular-nums">
+                      {item.val}
+                    </span>
+                    <span className="text-xs font-bold text-red-500/80">
+                      {item.valNp}
+                    </span>
+                  </div>
+                  <span className="text-[8px] font-bold text-white/40 uppercase">
+                    {item.label} • {item.np}
                   </span>
                 </div>
-                <span className="text-[8px] font-bold text-white/40 uppercase">
-                  {item.label} • {item.np}
-                </span>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <span className="text-green-500 font-black text-sm">
+              {isNp ? "निर्वाचन आज हो 🇳🇵" : "Election Day is Today 🇳🇵"}
+            </span>
+          )}
         </div>
         <p className="mt-2 text-[9px] font-black text-red-600 uppercase tracking-[0.2em] mr-2">
-          {content.countdown_label ||
-            (isNp ? "निर्वाचन बाँकी समय" : "Days Until Election")}
+          {isNp ? "निर्वाचन बाँकी समय" : "Days Until Election"}
         </p>
       </div>
 
@@ -172,6 +256,23 @@ export function HeroSection({ data }) {
               {content.cta_text || (isNp ? "हाम्रो लक्ष्य" : "OUR VISION")}
               <ArrowRight className="group-hover:translate-x-2 transition-transform w-5 h-5" />
             </Link>
+
+            <div className="flex lg:hidden justify-center gap-4 mt-8">
+              {socialLinks.map((item, i) => {
+                const Icon = item.icon;
+                return (
+                  <a
+                    key={i}
+                    href={normalizeUrl(item.url)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-12 h-12 rounded-full flex items-center justify-center bg-white/5 backdrop-blur-xl border border-white/10 hover:bg-red-600 transition-all duration-300 hover:scale-110"
+                  >
+                    <Icon className="w-5 h-5 text-white" />
+                  </a>
+                );
+              })}
+            </div>
           </motion.div>
 
           <motion.div

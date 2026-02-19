@@ -141,3 +141,62 @@ contentSchema.index({ page: 1, key: 1 }, { unique: true });
 
 export const Content =
   mongoose.models.Content || mongoose.model("Content", contentSchema);
+
+const gallerySchema = new mongoose.Schema({
+  filename: { type: String, required: true },
+  url: { type: String, required: true },
+  uploadedAt: { type: Date, default: Date.now },
+});
+
+export const GalleryImage =
+  mongoose.models.GalleryImage || mongoose.model("GalleryImage", gallerySchema);
+
+const videoSchema = new mongoose.Schema({
+  titleEn: { type: String, required: true },
+  titleNp: { type: String },
+  videoUrl: { type: String, required: true },
+  thumbnailUrl: { type: String },
+  uploadedAt: { type: Date, default: Date.now },
+});
+
+export const GalleryVideo =
+  mongoose.models.GalleryVideo || mongoose.model("GalleryVideo", videoSchema);
+
+const programSchema = new mongoose.Schema(
+  {
+    titleEn: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    titleNp: {
+      type: String,
+      trim: true,
+    },
+    locationEn: {
+      type: String,
+      required: true,
+    },
+    locationNp: {
+      type: String,
+    },
+    date: {
+      type: Date,
+      required: true,
+    },
+    timeEn: String,
+    timeNp: String,
+
+    status: {
+      type: String,
+      enum: ["UPCOMING", "ONGOING", "COMPLETED", "CANCELLED"],
+      default: "UPCOMING",
+    },
+  },
+  { timestamps: true },
+);
+
+programSchema.index({ date: 1 });
+
+export const Program =
+  mongoose.models.Program || mongoose.model("Program", programSchema);

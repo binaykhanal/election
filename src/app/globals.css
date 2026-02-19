@@ -298,3 +298,10 @@ html[lang="np"] .text-\[7px\] {
   font-size: 10px !important;
   line-height: 1;
 }
+
+.navtext[lang="np"] {
+  font-size: 14px !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  font-weight: 700 !important;
+}

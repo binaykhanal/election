@@ -75,10 +75,10 @@ export default function AboutPage() {
               className="animate-pulse"
             />
           </div>
-          <h1 className="text-3xl md:text-5xl font-black text-gray-900 mb-6 tracking-tighter italic uppercase">
+          <h1 className="text-2xl md:text-4xl font-black text-gray-900 mb-6 tracking-tighter  uppercase">
             {meta.title || (locale === "np" ? "मेरो बारेमा" : "About Me")}
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 font-medium leading-relaxed">
+          <p className="text-lg md:text-xl text-gray-600 font-medium leading-relaxed">
             {meta.subtitle || ""}
           </p>
           <div className="flex items-center justify-center gap-4 mt-8">

@@ -11,7 +11,11 @@
     "blogs": "Blogs",
     "contact": "Contact",
     "join": "Join Campaign",
-    "support": "Support Us"
+    "support": "Support Us",
+    "media": "Media",
+    "images": "Images",
+    "videos": "Videos",
+    "programs": "Daily Programs"
   },
   "hero": {
     "tagline": "For a New Nepal",
@@ -54,6 +58,17 @@
     "readMore": "Read More",
     "publishedOn": "Published on",
     "by": "By"
+  },
+
+  "gallery": {
+    "loading": "Loading Gallery...",
+    "titlePrefix": "Campaign",
+    "titleHighlight": "Moments",
+    "subtitle": "Visual highlights of our journey towards a prosperous Bhaktapur-2.",
+    "noPhotos": "No photos uploaded yet.",
+    "videoTitle": "Video Gallery",
+    "videoSubtitle": "Witness the journey through our digital archives and campaign highlights.",
+    "viewLarge": "View Large"
   },
   "contact": {
     "title": "Contact Us",

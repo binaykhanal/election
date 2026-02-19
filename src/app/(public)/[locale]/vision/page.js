@@ -87,10 +87,10 @@ export default function VisionPage() {
               className="animate-pulse"
             />
           </div>
-          <h1 className="text-4xl md:text-7xl font-black text-gray-900 mb-6 tracking-tighter uppercase italic">
+          <h1 className="text-2xl md:text-4xl font-black text-gray-900 mb-6 tracking-tighter uppercase ">
             {visionData.title || t("title")}
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 font-medium max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-gray-600 font-medium max-w-2xl mx-auto leading-relaxed">
             {visionData.subtitle || t("subtitle")}
           </p>
           <div className="flex items-center justify-center gap-4 mt-10">

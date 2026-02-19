@@ -84,11 +84,11 @@ export default function ExperiencePage() {
             </div>
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 tracking-tighter uppercase italic leading-none">
+          <h1 className="text-2xl md:text-4xl font-black text-gray-900 mb-6 tracking-tighter uppercase  leading-none">
             {experienceData?.pageTitle ||
               (locale === "np" ? "राजनीतिक यात्रा" : "Political Journey")}
           </h1>
-          <p className="text-xl md:text-2xl text-gray-500 font-medium italic max-w-2xl mx-auto border-t border-red-100 pt-6">
+          <p className="text-lg md:text-xl text-gray-500 font-medium italic max-w-2xl mx-auto border-t border-red-100 pt-6">
             "
             {experienceData?.pageSubtitle ||
               (locale === "np"

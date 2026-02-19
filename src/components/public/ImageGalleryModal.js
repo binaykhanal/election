@@ -44,7 +44,7 @@ export default function ImageGalleryModal({ onSelect, onClose }) {
   };
 
   const handleDelete = async (e, fileUrl) => {
-    e.stopPropagation(); // Prevent selecting the image when clicking delete
+    e.stopPropagation(); 
     if (!confirm("Delete this image forever?")) return;
 
     setIsDeleting(fileUrl);

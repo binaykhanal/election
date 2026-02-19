@@ -29,6 +29,7 @@ export default function SettingsPage() {
     twitterUrl: { en: "", np: "" },
     youtubeUrl: { en: "", np: "" },
     instagramUrl: { en: "", np: "" },
+    tiktokUrl: { en: "", np: "" },
   });
 
   useEffect(() => {
@@ -201,6 +202,12 @@ export default function SettingsPage() {
                 label="YouTube Channel URL"
                 k="youtubeUrl"
                 val={settings.youtubeUrl}
+                onUpd={handleUpdate}
+              />
+              <SettingInput
+                label="TikTok Profile URL"
+                k="tiktokUrl"
+                val={settings.tiktokUrl}
                 onUpd={handleUpdate}
               />
             </div>

@@ -21,16 +21,20 @@ export function VisionContent({ data, isNp }) {
   const [selectedVision, setSelectedVision] = useState(null);
 
   useEffect(() => {
+    const html = document.documentElement;
     if (selectedVision) {
       document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
+      html.style.overflow = "hidden";
+      html.classList.add("modal-active");
     } else {
       document.body.style.overflow = "unset";
-      document.documentElement.style.overflow = "unset";
+      html.style.overflow = "unset";
+      html.classList.remove("modal-active");
     }
     return () => {
       document.body.style.overflow = "unset";
-      document.documentElement.style.overflow = "unset";
+      html.style.overflow = "unset";
+      html.classList.remove("modal-active");
     };
   }, [selectedVision]);
 

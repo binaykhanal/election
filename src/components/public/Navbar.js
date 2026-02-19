@@ -84,7 +84,10 @@ export function PublicNavbar() {
   const isMediaActive = pathname.includes(`/${locale}/media`);
 
   return (
-    <header className="fixed top-3 md:top-6 inset-x-0 z-[999] flex justify-center px-4 transition-transform duration-300 [.gallery-open_&]:-translate-y-32 [.gallery-open_&]:pointer-events-none">
+    <header
+      className="fixed top-3 md:top-6 inset-x-0 z-[999] flex justify-center px-4 transition-transform duration-300 [.modal-active_&]:opacity-0 
+      [.modal-active_&]:pointer-events-none [.modal-active_&]:-translate-y-10 [.gallery-open_&]:-translate-y-32 [.gallery-open_&]:pointer-events-none"
+    >
       {" "}
       <nav className="flex items-center gap-2 md:gap-4 bg-white/80 dark:bg-black/80 backdrop-blur-2xl border border-gray-300/50 dark:border-white/20 px-3 md:px-4 py-2 rounded-full shadow-2xl transition-all duration-300">
         <div className="flex lg:hidden items-center gap-2 pr-2 border-r border-gray-300 dark:border-white/10">

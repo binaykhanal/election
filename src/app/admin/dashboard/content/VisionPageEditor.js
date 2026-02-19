@@ -1,7 +1,8 @@
 "use client";
+
 import { useState } from "react";
 import dynamic from "next/dynamic";
-import { CheckSquare, Video, Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, Video } from "lucide-react";
 
 const CkEditor = dynamic(() => import("@/components/editor/CkEditor"), {
   ssr: false,
@@ -31,10 +32,7 @@ export default function VisionPageEditor({ value, onChange }) {
     videos: [],
   };
 
-  const [data, setData] = useState({
-    ...defaultData,
-    ...value,
-  });
+  const [data, setData] = useState({ ...defaultData, ...value });
 
   const syncData = (newData) => {
     setData(newData);
@@ -42,11 +40,10 @@ export default function VisionPageEditor({ value, onChange }) {
   };
 
   const addVideo = () => {
-    const newData = {
+    syncData({
       ...data,
       videos: [...(data.videos || []), { title: "", url: "" }],
-    };
-    syncData(newData);
+    });
   };
 
   const updateVideo = (index, field, val) => {
@@ -59,47 +56,35 @@ export default function VisionPageEditor({ value, onChange }) {
     const vids = data.videos.filter((_, i) => i !== index);
     syncData({ ...data, videos: vids });
   };
-  const updateVisionItem = (index, field, val) => {
-    const items = [...data.vision_items];
-    items[index][field] = val;
-    setData({ ...data, vision_items: items });
-    onChange?.({ ...data, vision_items: items });
-  };
 
   const addVisionItem = () => {
     const items = [
       ...data.vision_items,
-      { title: "", icon: "graduation", color: "bg-blue-500", points: [] },
+      { title: "", icon: "graduation", color: "bg-blue-500", content: "" },
     ];
-    setData({ ...data, vision_items: items });
-    onChange?.({ ...data, vision_items: items });
+    syncData({ ...data, vision_items: items });
   };
 
-  const addPoint = (index) => {
-    const items = [...data.vision_items];
-    items[index].points.push("");
-    setData({ ...data, vision_items: items });
-    onChange?.({ ...data, vision_items: items });
+  const removeVisionItem = (index) => {
+    const items = data.vision_items.filter((_, i) => i !== index);
+    syncData({ ...data, vision_items: items });
   };
 
-  const updatePoint = (vIndex, pIndex, val) => {
+  const updateVisionItem = (index, field, val) => {
     const items = [...data.vision_items];
-    items[vIndex].points[pIndex] = val;
-    setData({ ...data, vision_items: items });
-    onChange?.({ ...data, vision_items: items });
+    items[index][field] = val;
+    syncData({ ...data, vision_items: items });
+  };
+
+  const addCommitment = () => {
+    const commits = [...data.commitments, { value: "", text: "" }];
+    syncData({ ...data, commitments: commits });
   };
 
   const updateCommitment = (index, field, val) => {
     const commits = [...data.commitments];
     commits[index][field] = val;
-    setData({ ...data, commitments: commits });
-    onChange?.({ ...data, commitments: commits });
-  };
-
-  const addCommitment = () => {
-    const commits = [...data.commitments, { value: "", text: "" }];
-    setData({ ...data, commitments: commits });
-    onChange?.({ ...data, commitments: commits });
+    syncData({ ...data, commitments: commits });
   };
 
   return (
@@ -109,17 +94,16 @@ export default function VisionPageEditor({ value, onChange }) {
           placeholder="Page Title"
           className="w-full border p-2 rounded"
           value={data.title}
-          onChange={(e) => setData({ ...data, title: e.target.value })}
+          onChange={(e) => syncData({ ...data, title: e.target.value })}
         />
         <input
           placeholder="Subtitle"
           className="w-full border p-2 rounded"
           value={data.subtitle}
-          onChange={(e) => setData({ ...data, subtitle: e.target.value })}
+          onChange={(e) => syncData({ ...data, subtitle: e.target.value })}
         />
       </div>
 
-      {/* Manifesto Section */}
       <div className="bg-yellow-50 p-6 rounded border border-yellow-200 space-y-4">
         <h3 className="text-sm font-bold text-yellow-700 uppercase">
           Manifesto Section
@@ -149,7 +133,7 @@ export default function VisionPageEditor({ value, onChange }) {
           <Video size={16} /> Campaign Videos / Interviews
         </h3>
         <div className="space-y-3">
-          {(data.videos || []).map((vid, index) => (
+          {data.videos?.map((vid, index) => (
             <div
               key={index}
               className="flex gap-2 bg-white p-2 rounded border shadow-sm"
@@ -192,8 +176,15 @@ export default function VisionPageEditor({ value, onChange }) {
           return (
             <div
               key={index}
-              className="border p-4 rounded bg-gray-50 space-y-3"
+              className="border p-4 rounded bg-gray-50 space-y-3 relative"
             >
+              <button
+                onClick={() => removeVisionItem(index)}
+                className="absolute top-2 right-2 p-2 text-red-500 hover:bg-red-50 rounded"
+              >
+                <Trash2 size={18} />
+              </button>
+
               <input
                 placeholder="Vision Title"
                 className="w-full border p-2 rounded"
@@ -203,7 +194,6 @@ export default function VisionPageEditor({ value, onChange }) {
                 }
               />
 
-              {/* Icon selector */}
               <div className="flex items-center gap-2">
                 <IconComponent className="w-6 h-6 text-gray-700" />
                 <select
@@ -219,46 +209,37 @@ export default function VisionPageEditor({ value, onChange }) {
                     </option>
                   ))}
                 </select>
+
+                <input
+                  placeholder="Tailwind Color (bg-blue-500)"
+                  className="border p-2 rounded w-32"
+                  value={item.color}
+                  onChange={(e) =>
+                    updateVisionItem(index, "color", e.target.value)
+                  }
+                />
               </div>
 
-              <input
-                placeholder="Tailwind Color (bg-blue-500)"
-                className="w-full border p-2 rounded"
-                value={item.color}
-                onChange={(e) =>
-                  updateVisionItem(index, "color", e.target.value)
-                }
-              />
-
-              <div className="space-y-2">
-                {item.points.map((point, pIndex) => (
-                  <input
-                    key={pIndex}
-                    placeholder="Point"
-                    className="w-full border p-2 rounded"
-                    value={point}
-                    onChange={(e) => updatePoint(index, pIndex, e.target.value)}
-                  />
-                ))}
-                <button
-                  onClick={() => addPoint(index)}
-                  className="text-xs bg-gray-900 text-white px-3 py-1 rounded"
-                >
-                  + Add Point
-                </button>
+              <div className="bg-white rounded border">
+                <CkEditor
+                  editorData={item.content}
+                  handleEditorChange={(val) =>
+                    updateVisionItem(index, "content", val)
+                  }
+                />
               </div>
             </div>
           );
         })}
+
         <button
           onClick={addVisionItem}
-          className="bg-red-600 text-white px-4 py-2 rounded font-semibold"
+          className="bg-red-600 text-white px-4 py-2 rounded font-semibold flex items-center gap-2"
         >
-          + Add Vision
+          <Plus size={16} /> Add Vision
         </button>
       </div>
 
-      {/* Commitments */}
       <div className="space-y-6">
         <h3 className="text-sm font-bold text-gray-500 uppercase">
           Commitments

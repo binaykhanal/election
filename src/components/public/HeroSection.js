@@ -313,7 +313,7 @@ export function HeroSection({ data }) {
                     </AnimatePresence>
                   </div>
                   <div className="text-left">
-                    <h3 className="text-white font-black text-sm md:text-xl uppercase tracking-tight truncate max-w-[150px] md:max-w-none">
+                    <h3 className="text-white font-black text-xs md:text-xl uppercase tracking-tight  max-w-[150px] md:max-w-none">
                       {content.name}
                     </h3>
                     <p className="text-white/60 text-[9px] md:text-[11px] font-bold uppercase tracking-widest truncate">

@@ -87,7 +87,7 @@ export function MeetDeepshikha() {
               {experienceData.politicalExperience?.[0] && (
                 <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-red-200 transition-colors">
                   <div className="w-8 h-8 p-3 bg-white rounded-full flex items-center justify-center text-red-600 shadow-sm">
-                    <History size={24}className="shrink-0"/>
+                    <History size={24} className="shrink-0" />
                   </div>
                   <div>
                     <p className="text-xs font-bold text-gray-400 uppercase">

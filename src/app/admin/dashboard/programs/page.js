@@ -10,7 +10,6 @@ import {
   Save,
   X,
   Loader2,
-  CheckCircle2,
 } from "lucide-react";
 
 export default function ProgramAdmin() {
@@ -84,7 +83,7 @@ export default function ProgramAdmin() {
     setEditingId(program._id);
     setFormData({
       ...program,
-      date: program.date.split("T")[0], 
+      date: program.date.split("T")[0],
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -128,121 +127,152 @@ export default function ProgramAdmin() {
           {editingId ? "Edit Program" : "Add New Program"}
         </h2>
 
-        <form
-          onSubmit={handleSubmit}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6"
-        >
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Title (English)"
-              required
-              className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-2 ring-red-500/20 outline-none transition-all"
-              value={formData.titleEn}
-              onChange={(e) =>
-                setFormData({ ...formData, titleEn: e.target.value })
-              }
-            />
-            <input
-              type="text"
-              placeholder="शीर्षक (नेपाली)"
-              className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-2 ring-red-500/20 outline-none transition-all"
-              value={formData.titleNp}
-              onChange={(e) =>
-                setFormData({ ...formData, titleNp: e.target.value })
-              }
-            />
-            <div className="grid grid-cols-2 gap-4">
-              <input
-                type="date"
-                required
-                className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl"
-                value={formData.date}
-                onChange={(e) =>
-                  setFormData({ ...formData, date: e.target.value })
-                }
-              />
-              <select
-                className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl"
-                value={formData.status}
-                onChange={(e) =>
-                  setFormData({ ...formData, status: e.target.value })
-                }
-              >
-                <option value="UPCOMING">Upcoming</option>
-                <option value="ONGOING">Ongoing</option>
-                <option value="COMPLETED">Completed</option>
-              </select>
-            </div>
-          </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase text-neutral-400 px-1">
+                  Program Details
+                </label>
+                <input
+                  type="text"
+                  placeholder="Title (English)"
+                  required
+                  className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-2 ring-red-500/20 outline-none transition-all"
+                  value={formData.titleEn}
+                  onChange={(e) =>
+                    setFormData({ ...formData, titleEn: e.target.value })
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="शीर्षक (नेपाली)"
+                  className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl focus:ring-2 ring-red-500/20 outline-none transition-all"
+                  value={formData.titleNp}
+                  onChange={(e) =>
+                    setFormData({ ...formData, titleNp: e.target.value })
+                  }
+                />
+              </div>
 
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Location (English)"
-              required
-              className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl outline-none"
-              value={formData.locationEn}
-              onChange={(e) =>
-                setFormData({ ...formData, locationEn: e.target.value })
-              }
-            />
-            <div className="grid grid-cols-2 gap-4">
-              <input
-                type="text"
-                placeholder="Time (e.g. 10 AM)"
-                className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl"
-                value={formData.timeEn}
-                onChange={(e) =>
-                  setFormData({ ...formData, timeEn: e.target.value })
-                }
-              />
-              <input
-                type="text"
-                placeholder="समय (उदा: बिहान १० बजे)"
-                className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl"
-                value={formData.timeNp}
-                onChange={(e) =>
-                  setFormData({ ...formData, timeNp: e.target.value })
-                }
-              />
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase text-neutral-400 px-1">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  placeholder="Location (English)"
+                  required
+                  className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl outline-none"
+                  value={formData.locationEn}
+                  onChange={(e) =>
+                    setFormData({ ...formData, locationEn: e.target.value })
+                  }
+                />
+                <input
+                  type="text"
+                  placeholder="स्थान (नेपाली)"
+                  className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl outline-none"
+                  value={formData.locationNp}
+                  onChange={(e) =>
+                    setFormData({ ...formData, locationNp: e.target.value })
+                  }
+                />
+              </div>
             </div>
-            <div className="flex gap-3 pt-2">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="flex-1 bg-neutral-900 text-white p-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-red-600 transition-all"
-              >
-                {isSubmitting ? (
-                  <Loader2 className="animate-spin" size={18} />
-                ) : editingId ? (
-                  <Save size={18} />
-                ) : (
-                  <Plus size={18} />
-                )}
-                {editingId ? "Update Program" : "Save Program"}
-              </button>
-              {editingId && (
+
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase text-neutral-400 px-1">
+                  Schedule & Status
+                </label>
+                <div className="grid grid-cols-2 gap-4">
+                  <input
+                    type="date"
+                    required
+                    className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl"
+                    value={formData.date}
+                    onChange={(e) =>
+                      setFormData({ ...formData, date: e.target.value })
+                    }
+                  />
+                  <select
+                    className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl"
+                    value={formData.status}
+                    onChange={(e) =>
+                      setFormData({ ...formData, status: e.target.value })
+                    }
+                  >
+                    <option value="UPCOMING">Upcoming</option>
+                    <option value="ONGOING">Ongoing</option>
+                    <option value="COMPLETED">Completed</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase text-neutral-400 px-1">
+                  Timing
+                </label>
+                <div className="grid grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    placeholder="Time (e.g. 10 AM)"
+                    className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl"
+                    value={formData.timeEn}
+                    onChange={(e) =>
+                      setFormData({ ...formData, timeEn: e.target.value })
+                    }
+                  />
+                  <input
+                    type="text"
+                    placeholder="समय (उदा: बिहान १० बजे)"
+                    className="w-full p-3 bg-neutral-50 border border-neutral-200 rounded-xl"
+                    value={formData.timeNp}
+                    onChange={(e) =>
+                      setFormData({ ...formData, timeNp: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3 pt-4">
                 <button
-                  type="button"
-                  onClick={() => {
-                    setEditingId(null);
-                    setFormData({
-                      titleEn: "",
-                      titleNp: "",
-                      locationEn: "",
-                      locationNp: "",
-                      date: "",
-                      timeEn: "",
-                      timeNp: "",
-                      status: "UPCOMING",
-                    });
-                  }}
-                  className="bg-neutral-200 text-neutral-600 px-6 rounded-xl font-bold hover:bg-neutral-300 transition-all"
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 bg-neutral-900 text-white p-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-red-600 transition-all shadow-lg shadow-black/10"
                 >
-                  <X size={18} />
+                  {isSubmitting ? (
+                    <Loader2 className="animate-spin" size={18} />
+                  ) : editingId ? (
+                    <Save size={18} />
+                  ) : (
+                    <Plus size={18} />
+                  )}
+                  {editingId ? "Update Program" : "Save Program"}
                 </button>
-              )}
+                {editingId && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingId(null);
+                      setFormData({
+                        titleEn: "",
+                        titleNp: "",
+                        locationEn: "",
+                        locationNp: "",
+                        date: "",
+                        timeEn: "",
+                        timeNp: "",
+                        status: "UPCOMING",
+                      });
+                    }}
+                    className="bg-neutral-200 text-neutral-600 px-6 rounded-xl font-bold hover:bg-neutral-300 transition-all"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </form>
@@ -260,14 +290,17 @@ export default function ProgramAdmin() {
               </div>
               <div>
                 <h3 className="font-bold text-neutral-800 uppercase tracking-tight">
-                  {p.titleEn}
+                  {p.titleEn} <span className="text-neutral-300 mx-2">|</span>{" "}
+                  {p.titleNp}
                 </h3>
-                <div className="flex gap-4 text-xs text-neutral-400 mt-1 font-medium">
+                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-neutral-400 mt-1 font-medium">
                   <span className="flex items-center gap-1">
-                    <MapPin size={12} /> {p.locationEn}
+                    <MapPin size={12} className="text-red-400" /> {p.locationEn}{" "}
+                    / {p.locationNp}
                   </span>
                   <span className="flex items-center gap-1">
-                    <Clock size={12} /> {p.timeEn}
+                    <Clock size={12} className="text-red-400" /> {p.timeEn} /{" "}
+                    {p.timeNp}
                   </span>
                 </div>
               </div>
@@ -275,7 +308,11 @@ export default function ProgramAdmin() {
 
             <div className="flex items-center gap-2 mt-4 md:mt-0">
               <span
-                className={`text-[10px] px-3 py-1 rounded-full font-bold ${p.status === "COMPLETED" ? "bg-green-100 text-green-600" : "bg-amber-100 text-amber-600"}`}
+                className={`text-[10px] px-3 py-1 rounded-full font-bold ${
+                  p.status === "COMPLETED"
+                    ? "bg-green-100 text-green-600"
+                    : "bg-amber-100 text-amber-600"
+                }`}
               >
                 {p.status}
               </span>

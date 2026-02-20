@@ -36,7 +36,7 @@ export function MeetDeepshikha() {
   if (!experienceData) return null;
 
   return (
-    <section className="py-20 bg-white relative overflow-hidden border-b border-gray-100">
+    <section className="py-16 bg-white relative overflow-hidden border-b border-gray-100">
       <div className="absolute top-0 right-0 opacity-[0.03] pointer-events-none -translate-y-1/4 translate-x-1/4">
         <Image src="/images/star.png" alt="" width={600} height={600} />
       </div>

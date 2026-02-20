@@ -8,6 +8,7 @@ import { MeetDeepshikha } from "@/components/public/MeetDeepshikha";
 import { VisionPreview } from "@/components/public/VisionPreview";
 import { LatestBlogs } from "@/components/public/LatestBlogs";
 import { CTASection } from "@/components/public/CTASection";
+import { HomeVideoSection } from "@/components/public/HomeVideoSection";
 
 export default function HomePage() {
   const locale = useLocale();
@@ -50,6 +51,7 @@ export default function HomePage() {
       <MeetDeepshikha />
       <VisionPreview data={pageData?.vision_preview} />
       <LatestBlogs />
+      <HomeVideoSection />
       <CTASection data={pageData?.cta_home} />
     </>
   );

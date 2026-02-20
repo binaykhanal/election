@@ -122,8 +122,7 @@ export default function DashboardHome() {
         </nav>
       </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 ml-64 p-8 bg-gray-50 overflow-y-auto max-h-screen">
+      <main className="flex-1 p-8 bg-gray-50 overflow-y-auto max-h-screen">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-gray-900">
             Dashboard Overview
@@ -157,7 +156,6 @@ export default function DashboardHome() {
           />
         </div>
 
-        {/* Recent Inquiries */}
         <div className="bg-white rounded-xl shadow-sm border p-6 mb-8">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-bold text-gray-900">
@@ -236,7 +234,6 @@ export default function DashboardHome() {
           </div>
         </div>
 
-        {/* Quick Actions */}
         <div className="grid md:grid-cols-2 gap-6">
           <div className="bg-white rounded-xl shadow-sm border p-6">
             <h3 className="text-lg font-bold text-gray-900 mb-4">
@@ -265,7 +262,6 @@ export default function DashboardHome() {
   );
 }
 
-// StatCard component
 function StatCard({ label, value, icon: Icon, color, loading }) {
   const colors = {
     blue: "bg-blue-100 text-blue-600",
@@ -294,7 +290,6 @@ function StatCard({ label, value, icon: Icon, color, loading }) {
   );
 }
 
-// ActionLink component
 function ActionLink({ href, title, desc, icon: Icon, iconBg }) {
   return (
     <Link
@@ -316,7 +311,6 @@ function ActionLink({ href, title, desc, icon: Icon, iconBg }) {
   );
 }
 
-// Sidebar MenuLink component
 function MenuLink({ href, title, icon: Icon }) {
   return (
     <Link

@@ -3,9 +3,10 @@
 import { useState, useEffect, useMemo } from "react";
 import { useLocale } from "next-intl";
 import Link from "next/link";
-import { ArrowRight, Clock } from "lucide-react";
+import { ArrowRight, Calendar, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Facebook, Twitter, Instagram, Youtube } from "lucide-react";
+import ProgramModal from "./ProgramModal";
 
 function TikTokIcon({ className }) {
   return (
@@ -21,6 +22,7 @@ export function HeroSection({ data }) {
   const [isStamped, setIsStamped] = useState(false);
   const [timeLeft, setTimeLeft] = useState(undefined);
   const [settings, setSettings] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const content = useMemo(() => {
     if (!data) return null;
@@ -102,6 +104,55 @@ export function HeroSection({ data }) {
 
   const getVal = (key) => {
     return settings[key]?.[locale] || settings[key]?.en || "";
+  };
+
+  const toNepaliNum = (num) => {
+    if (!num) return "";
+    const symbols = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
+    return num
+      .toString()
+      .split("")
+      .map((d) => symbols[d] || d)
+      .join("");
+  };
+
+  const getNepaliDate = (isoDate) => {
+    const adDate = new Date(isoDate);
+    if (isNaN(adDate)) return { day: "??", month: "??" };
+    const nepaliMonths = [
+      "बैशाख",
+      "जेठ",
+      "असार",
+      "साउन",
+      "भदौ",
+      "असोज",
+      "कात्तिक",
+      "मंसिर",
+      "पुष",
+      "माघ",
+      "फागुन",
+      "चैत",
+    ];
+    const refAd = new Date("2024-04-13");
+    const diffDays = Math.floor(
+      (adDate.getTime() - refAd.getTime()) / (1000 * 60 * 60 * 24),
+    );
+    let bsYear = 2081,
+      bsMonth = 0,
+      bsDay = 1 + diffDays;
+    const monthDaysMap = {
+      2081: [31, 31, 32, 32, 31, 30, 30, 30, 29, 30, 29, 30],
+      2082: [31, 32, 31, 32, 31, 30, 30, 30, 29, 30, 30, 30],
+    };
+    while (bsDay > (monthDaysMap[bsYear]?.[bsMonth] || 30)) {
+      bsDay -= monthDaysMap[bsYear][bsMonth];
+      bsMonth++;
+      if (bsMonth > 11) {
+        bsMonth = 0;
+        bsYear++;
+      }
+    }
+    return { day: toNepaliNum(bsDay), month: nepaliMonths[bsMonth] };
   };
 
   const normalizeUrl = (url) => {
@@ -236,11 +287,11 @@ export function HeroSection({ data }) {
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-[110px] font-black tracking-[-0.06em] text-white leading-tight mb-6">
-              <span className="block bg-gradient-to-br from-white to-gray-500 bg-clip-text text-transparent">
+            <h1 className=" font-black text-2xl md:text-5xl tracking-[-0.06em] text-white leading-tight mb-6">
+              <span className="block  bg-gradient-to-br from-white to-gray-500 bg-clip-text text-transparent">
                 {content.name}
               </span>
-              <span className="block text-2xl md:text-5xl text-yellow-500 italic mt-2 tracking-wide">
+              <span className="block text-5xl md:text-[80px]  text-yellow-500  mt-6 tracking-wide">
                 ({content.nickname})
               </span>
             </h1>
@@ -248,15 +299,23 @@ export function HeroSection({ data }) {
             <p className="text-base md:text-xl text-white/50 max-w-2xl mx-auto lg:mx-0 mb-10 border-l-2 border-red-600/40 pl-4 italic">
               {content.description}
             </p>
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <Link
+                href={`/${locale}/vision`}
+                className="group inline-flex items-center gap-4 bg-red-600 text-white px-8 md:px-10 py-4 md:py-5 rounded-xl md:rounded-2xl font-black text-base md:text-lg hover:bg-red-500 transition-all shadow-xl"
+              >
+                {content.cta_text || (isNp ? "हाम्रो लक्ष्य" : "OUR VISION")}
+                <ArrowRight className="group-hover:translate-x-2 transition-transform w-5 h-5" />
+              </Link>
 
-            <Link
-              href={`/${locale}/vision`}
-              className="group inline-flex items-center gap-4 bg-red-600 text-white px-8 md:px-10 py-4 md:py-5 rounded-xl md:rounded-2xl font-black text-base md:text-lg hover:bg-red-500 transition-all shadow-xl"
-            >
-              {content.cta_text || (isNp ? "हाम्रो लक्ष्य" : "OUR VISION")}
-              <ArrowRight className="group-hover:translate-x-2 transition-transform w-5 h-5" />
-            </Link>
-
+              <button
+                onClick={() => setIsModalOpen(true)}
+                className=" cursor-pointer  group inline-flex items-center gap-4 bg-white/10 backdrop-blur-xl border border-white/20 text-white px-8 md:px-10 py-4 md:py-5 rounded-xl md:rounded-2xl font-black text-base md:text-lg hover:bg-white/20 transition-all"
+              >
+                <Calendar className="w-5 h-5 text-red-500" />
+                {isNp ? "आजको कार्यक्रम" : "TODAY'S PLAN"}
+              </button>
+            </div>
             <div className="flex lg:hidden justify-center gap-4 mt-8">
               {socialLinks.map((item, i) => {
                 const Icon = item.icon;
@@ -329,6 +388,18 @@ export function HeroSection({ data }) {
           </motion.div>
         </div>
       </div>
+
+      <AnimatePresence>
+        {isModalOpen && (
+          <ProgramModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            locale={locale}
+            toNepaliNum={toNepaliNum}
+            getNepaliDate={getNepaliDate}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }

@@ -2,10 +2,20 @@ import { NextResponse } from "next/server";
 import connectDB from "@/lib/server/db";
 import { Program } from "@/models/index";
 
-export async function GET() {
+export async function GET(req) {
   await connectDB();
+  const { searchParams } = new URL(req.url);
+  const limit = parseInt(searchParams.get("limit")) || 20;
   try {
-    const programs = await Program.find({}).sort({ date: -1 });
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const programs = await Program.find({
+      date: { $gte: today },
+    })
+      .sort({ date: 1 })
+      .limit(limit);
+
     return NextResponse.json(programs);
   } catch (error) {
     return NextResponse.json({ error: "Failed to fetch" }, { status: 500 });

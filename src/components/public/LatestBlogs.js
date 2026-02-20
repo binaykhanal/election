@@ -44,7 +44,7 @@ export function LatestBlogs() {
   if (isLoading || blogs.length === 0) return null;
 
   return (
-    <section className="py-20 bg-white relative overflow-hidden">
+    <section className="py-16 bg-white relative overflow-hidden">
       <div className="absolute top-0 left-0 opacity-[0.03] pointer-events-none -translate-y-1/4 translate-x-1/4 z-0">
         <Image
           src="/images/star.png"
